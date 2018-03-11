@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="#ffffff"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/usertype_title"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="125dp"
+        android:text="Please select your\nuser type"
+        android:textAlignment="textStart"
+        android:textColor="#181818"
+        android:textSize="14pt" />
+
+    <RadioGroup
+        android:id="@+id/usertype_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/usertype_title"
+        android:layout_alignStart="@+id/usertype_title"
+        android:layout_marginTop="25dp">
+
+
+        <RadioButton
+            android:id="@+id/usertype_student"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:checked="true"
+            android:text="Student"
+            android:textAlignment="textStart"
+            android:textColor="#181818"
+            android:textSize="8.5pt" />
+
+            <RadioButton
+                android:id="@+id/usertype_admin"
+                android:enabled="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Admin"
+                android:alpha="0.45"
+                android:textAlignment="textStart"
+                android:textColor="#181818"
+                android:textSize="8.5pt"
+                android:layout_marginLeft="15dp"/>
+
+</RadioGroup>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/usertype_next_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="#1e623d"
+        android:clickable="true"
+        android:contentDescription="Next"
+        android:onClick="check_user_type"
+        app:backgroundTint="#1e623d"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:rippleColor="#f6f6f6"
+        app:srcCompat="@drawable/arrow_forward" />
+
+    <ImageView
+        android:id="@+id/usertype_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:srcCompat="@drawable/person_add"
+        android:layout_above="@+id/usertype_group"
+        android:layout_alignStart="@+id/usertype_title"
+        android:layout_marginBottom="90dp" />
+
+    <TextView
+        android:id="@+id/signup_usertype_needhelp_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Need Help?"
+        android:textSize="8.5pt"
+        android:paddingBottom="16dp"
+        android:paddingLeft="10dp"
+        android:onClick="show_usertype_help"
+        android:paddingRight="10dp"
+        android:paddingTop="16dp"
+        android:textColor="#666666"
+        android:layout_alignBottom="@+id/usertype_next_btn"
+        android:layout_alignStart="@+id/usertype_group" />
+
+
+</RelativeLayout>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <TextView
+        android:id="@+id/signup_title"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="125dp"
+        android:text="Log in with your \ncollege username"
+        android:textAlignment="textStart"
+        android:textColor="#181818"
+        android:textSize="14pt" />
+
+    <EditText
+        android:id="@+id/login_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/signup_title"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:hint="Example: TYA11"
+        android:layout_marginTop="20dp"
+        android:imeOptions="actionDone"
+        android:inputType="textVisiblePassword"
+        android:maxLength="6"
+        android:maxLines="1"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:textSize="9pt"
+        android:textAllCaps="true"
+        />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/username_next_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/login_username"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:background="#1e623d"
+        android:clickable="true"
+        android:contentDescription="Next"
+        android:onClick="open_password_page"
+        app:backgroundTint="#1e623d"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:rippleColor="#f6f6f6"
+        app:srcCompat="@drawable/arrow_forward" />
+
+    <TextView
+        android:id="@+id/forgot_username_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/username_next_btn"
+        android:layout_alignStart="@+id/login_username"
+        android:background="#ffffff"
+        android:paddingBottom="16dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="16dp"
+        android:text="Forgot Username?"
+        android:textColor="#666666"
+        android:textSize="8.5pt" />
+
+    <ImageView
+        android:id="@+id/username_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_above="@+id/login_username"
+        android:layout_alignStart="@+id/signup_title"
+        android:layout_marginBottom="90dp"
+        app:srcCompat="@drawable/profile" />
+
+    <TextView
+        android:id="@+id/username_error"
+        android:alpha="0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Username error"
+        android:textSize="7pt"
+        android:textColor="#ff5252"
+        android:layout_below="@id/login_username"
+        android:layout_alignStart="@id/login_username"
+        android:layout_alignEnd="@id/username_next_btn"/>
+
+</RelativeLayout>

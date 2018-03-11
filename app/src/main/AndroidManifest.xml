@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="in.edu.cpi.cpica">
+    //Permissions:
+    <uses-permission android:name="android.permission.VIBRATE" />
+    //App settings:
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="false"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Login_username"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Login_password"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Signup_usertype"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Signup_student_username"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Signup_admin_username"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Signup_admin_password"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Student_dashboard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Signup_student_password"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Admin_dashboard"
+            android:screenOrientation="portrait"/>
+    </application>
+
+</manifest>

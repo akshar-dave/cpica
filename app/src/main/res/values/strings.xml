@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">CPICA</string>
+
+    <string-array name="Classes">
+        <item>-</item>
+        <item>FY</item>
+        <item>SY</item>
+        <item>TY</item>
+    </string-array>
+
+    <string-array name="Divisions">
+        <item>-</item>
+        <item>A</item>
+        <item>B</item>
+    </string-array>
+
+    <string-array name="Songs">
+        <item>Rock the house</item>
+        <item>Animals</item>
+        <item>Spaceman</item>
+    </string-array>
+</resources>
