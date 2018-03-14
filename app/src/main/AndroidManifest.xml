@@ -43,8 +43,18 @@
         <activity
             android:name=".Signup_student_password"
             android:screenOrientation="portrait" />
-        <activity android:name=".Admin_dashboard"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Admin_dashboard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".dashboard"
+            android:label="@string/title_activity_dashboard"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.edu.cpi.cpica.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
