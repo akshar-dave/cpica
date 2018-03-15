@@ -11,4 +11,19 @@
         android:layout_centerInParent="true"
         android:id="@+id/center_text"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/center_text"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="50dp"
+        android:text="TRY BETA FEATURES"
+        android:textSize="8.5pt"
+        android:background="@drawable/side_nav_bar"
+        android:textColor="#f9f9f9"
+        android:textStyle="bold"
+        android:id="@+id/try_beta_btn"/>
+
 </RelativeLayout>

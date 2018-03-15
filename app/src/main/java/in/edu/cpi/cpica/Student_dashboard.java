@@ -8,16 +8,28 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 public class Student_dashboard extends AppCompatActivity {
 
+
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_dashboard);
-        Intent i = new Intent(this,dashboard.class);
-        startActivity(i);
+
+        Button try_beta_btn = (Button)findViewById(R.id.try_beta_btn);
+        try_beta_btn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent(getApplicationContext(),dashboard.class);
+            startActivity(i);
+        }
+    });
+
     }
+
 
 }

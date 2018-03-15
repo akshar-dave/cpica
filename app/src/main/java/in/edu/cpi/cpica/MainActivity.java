@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         TextView welcome_text = (TextView)findViewById(R.id.welcome_text);
         ImageView logo = (ImageView)findViewById(R.id.main_logo);
         LinearLayout bottom_buttons = (LinearLayout) findViewById(R.id.main_activity_bottom_buttons);
@@ -54,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
         calendar_icon.startAnimation(calendar_icon_anim);
         class_icon.startAnimation(class_icon_anim);
     }
-
-
 
 
     public void openloginpage(View v){
@@ -112,4 +111,8 @@ public class MainActivity extends AppCompatActivity {
         message.show();
     }
 
+
+
 }
+
+
