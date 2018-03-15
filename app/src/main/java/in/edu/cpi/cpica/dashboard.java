@@ -16,14 +16,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class dashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -40,12 +44,16 @@ public class dashboard extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
+
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
     }
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -59,6 +67,10 @@ public class dashboard extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        String login_username = getIntent().getExtras().getString("login_username");
+        TextView username = (TextView)findViewById(R.id.username);
+        username.setText(login_username);
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.dashboard, menu);
         return true;
@@ -101,6 +113,7 @@ public class dashboard extends AppCompatActivity
     }
 
     public void logout(View v){
+
         AlertDialog.Builder logout_confirmation = new AlertDialog.Builder(dashboard.this);
         logout_confirmation.setMessage("Are you sure?");
         logout_confirmation.setPositiveButton("LOG OUT", new DialogInterface.OnClickListener() {
@@ -119,10 +132,6 @@ public class dashboard extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                dialog.dismiss();
-
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-
             }
         });
 
@@ -133,5 +142,8 @@ public class dashboard extends AppCompatActivity
     }
 
 }
+
+
+
 
 

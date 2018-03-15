@@ -13,18 +13,20 @@ import android.widget.Spinner;
 
 public class Student_dashboard extends AppCompatActivity {
 
-
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_dashboard);
 
+
         Button try_beta_btn = (Button)findViewById(R.id.try_beta_btn);
         try_beta_btn.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            String login_username = getIntent().getExtras().getString("login_username");
             Intent i = new Intent(getApplicationContext(),dashboard.class);
+            i.putExtra("login_username",login_username);
             startActivity(i);
         }
     });

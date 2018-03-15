@@ -74,6 +74,7 @@ public class Login_password extends AppCompatActivity {
             }
             else{
                 Intent i = new Intent(this, Student_dashboard.class);
+                i.putExtra("login_username",login_username);
                 startActivity(i);
             }
             password_next_btn.setRippleColor(Color.WHITE);
