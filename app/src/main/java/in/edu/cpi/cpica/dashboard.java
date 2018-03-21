@@ -68,8 +68,14 @@ public class dashboard extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         String login_username = getIntent().getExtras().getString("login_username");
+        String student_username = getIntent().getExtras().getString("student_username");
         TextView username = (TextView)findViewById(R.id.username);
-        username.setText(login_username);
+        if (student_username==null) {
+            username.setText(login_username);
+        }
+        else{
+            username.setText(student_username);
+        }
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.dashboard, menu);

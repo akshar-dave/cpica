@@ -65,6 +65,7 @@ public class Signup_student_username extends AppCompatActivity {
         FloatingActionButton signup_student_username_next_btn = (FloatingActionButton)findViewById(R.id.signup_student_username_next_btn);
         Animation fab_btn_error_bounce;
         fab_btn_error_bounce= AnimationUtils.loadAnimation(this,R.anim.fab_btn_error_bounce);
+        String student_username ="";
 
 
         if(div_group.getCheckedRadioButtonId()==-1 || class_group.getCheckedRadioButtonId()==-1 || roll_no.length()<1){
@@ -75,10 +76,13 @@ public class Signup_student_username extends AppCompatActivity {
             if (class_fy.isChecked() || class_sy.isChecked() || class_ty.isChecked()) {
                 if (class_fy.isChecked()) {
                     username_toast = username_toast + "FY";
+                    student_username = "FY";
                 } else if (class_sy.isChecked()) {
                     username_toast = username_toast + "SY";
+                    student_username = "SY";
                 } else if (class_ty.isChecked()) {
                     username_toast = username_toast + "TY";
+                    student_username = "TY";
                 }
 
             } else{
@@ -90,8 +94,10 @@ public class Signup_student_username extends AppCompatActivity {
 
                 if (div_a.isChecked()) {
                     username_toast = username_toast + "A";
+                    student_username = student_username + "A";
                 } else if (div_b.isChecked()) {
                     username_toast = username_toast + "B";
+                    student_username = student_username + "B";
                 }
             } else {
                 username_toast = "Please fill all details to continue";
@@ -111,21 +117,25 @@ public class Signup_student_username extends AppCompatActivity {
                           roll_no.getText().delete(1,2);   //deleting the two zeroes at the beginning
                           roll_no.getText().delete(0,1);
                           username_toast=username_toast+roll_no.getText().toString();
+                          student_username = student_username + roll_no.getText().toString();
                       }
                       else{
                           if(roll_no.length()>1 && roll_no.getText().toString().substring(0,1).equals("0")){
                               error_occurrence=false;
                               roll_no.getText().delete(0,1);  //deleting the zero at the beginning
                               username_toast=username_toast+roll_no.getText().toString();
+                              student_username = student_username + roll_no.getText().toString();
                           }
                           else{
                               username_toast=username_toast+roll_no.getText().toString();
+                              student_username = student_username + roll_no.getText().toString();
                               error_occurrence=false;
                           }
                       }
                   }
                   else{
                           username_toast=username_toast+roll_no.getText().toString();
+                        student_username = student_username + roll_no.getText().toString();
                           error_occurrence=false;
                   }
                }
@@ -148,6 +158,7 @@ public class Signup_student_username extends AppCompatActivity {
             show_message.show();
             signup_student_username_next_btn.setRippleColor(Color.WHITE);
             Intent i = new Intent(this,Signup_student_password.class);
+            i.putExtra("student_username",student_username);
             startActivity(i);
         }
 

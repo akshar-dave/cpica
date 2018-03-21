@@ -55,8 +55,11 @@ public class Signup_student_password extends AppCompatActivity {
         else{
             password_error.setAlpha(0);
             signup_student_next_btn.setRippleColor(Color.WHITE);
+            String student_username = getIntent().getExtras().getString("student_username");
             Intent i = new Intent(this, Student_dashboard.class);
+            i.putExtra("student_username",student_username);
             startActivity(i);
+
         }
     }
 }

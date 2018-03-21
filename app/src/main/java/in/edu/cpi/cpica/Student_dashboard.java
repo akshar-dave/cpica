@@ -25,8 +25,10 @@ public class Student_dashboard extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             String login_username = getIntent().getExtras().getString("login_username");
+            String student_username = getIntent().getExtras().getString("student_username");
             Intent i = new Intent(getApplicationContext(),dashboard.class);
             i.putExtra("login_username",login_username);
+            i.putExtra("student_username",student_username);
             startActivity(i);
         }
     });
