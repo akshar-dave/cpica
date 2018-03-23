@@ -1,18 +1,18 @@
 <resources>
     <string name="app_name">CPICA</string>
 
-    <string-array name="Classes">
+    <array name="Classes">
         <item>-</item>
         <item>FY</item>
         <item>SY</item>
         <item>TY</item>
-    </string-array>
+    </array>
 
-    <string-array name="Divisions">
+    <array name="Divisions">
         <item>-</item>
         <item>A</item>
         <item>B</item>
-    </string-array>
+    </array>
 
 
     <string name="title_activity_dashboard">Dashboard</string>

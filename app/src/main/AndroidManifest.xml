@@ -3,6 +3,7 @@
     package="in.edu.cpi.cpica">
     //Permissions:
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     //App settings:
     <application
         android:allowBackup="true"
@@ -49,13 +50,16 @@
         <activity
             android:name=".dashboard"
             android:label="@string/title_activity_dashboard"
-            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.edu.cpi.cpica.MainActivity" />
         </activity>
+        <activity android:name=".Signup_email"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

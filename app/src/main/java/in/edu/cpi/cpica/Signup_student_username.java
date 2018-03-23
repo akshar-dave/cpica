@@ -158,7 +158,9 @@ public class Signup_student_username extends AppCompatActivity {
             show_message.show();
             signup_student_username_next_btn.setRippleColor(Color.WHITE);
             Intent i = new Intent(this,Signup_student_password.class);
+            String email = getIntent().getExtras().getString("email");
             i.putExtra("student_username",student_username);
+            i.putExtra("email",email);
             startActivity(i);
         }
 

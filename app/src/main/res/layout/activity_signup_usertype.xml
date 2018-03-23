@@ -64,7 +64,6 @@
         android:background="#1e623d"
         android:clickable="true"
         android:contentDescription="Next"
-        android:onClick="check_user_type"
         app:backgroundTint="#1e623d"
         app:elevation="6dp"
         app:fabSize="normal"

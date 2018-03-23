@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +37,9 @@ import static in.edu.cpi.cpica.R.id.signup_usertype_needhelp_btn;
 
 public class Signup_usertype extends AppCompatActivity {
 
+    RadioButton student;
+    RadioButton admin;
+    String usertype_is="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,21 +50,24 @@ public class Signup_usertype extends AppCompatActivity {
         Animation fab_zoom_in_anim;
         fab_zoom_in_anim= AnimationUtils.loadAnimation(this,R.anim.fab_btn_zoom_in);
         usertype_next_btn.startAnimation(fab_zoom_in_anim);
+        student = (RadioButton) findViewById(R.id.usertype_student);
+        admin = (RadioButton) findViewById(R.id.usertype_admin);
+
 
         usertype_next_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RadioButton student = (RadioButton) findViewById(R.id.usertype_student);
-                RadioButton admin = (RadioButton) findViewById(R.id.usertype_admin);
 
-                if(student.isChecked())
-                {
-                    Intent i = new Intent(getApplicationContext(),Signup_student_username.class);
+                if(student.isChecked()){
+                    usertype_is="student";
+                    Intent i = new Intent(Signup_usertype.this,Signup_email.class);
+                    i.putExtra("usertype_is",usertype_is);
                     startActivity(i);
                 }
-                else if(admin.isChecked())
-                {
-                    Intent i = new Intent(getApplicationContext(),Signup_admin_username.class);
+                else if(admin.isChecked()){
+                    usertype_is="admin";
+                    Intent i = new Intent(Signup_usertype.this,Signup_email.class);
+                    i.putExtra("usertype_is",usertype_is);
                     startActivity(i);
                 }
             }

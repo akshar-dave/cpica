@@ -55,7 +55,7 @@ public class Login_password extends AppCompatActivity {
         Vibrator buzzer = (Vibrator)this.getSystemService(Context.VIBRATOR_SERVICE);
         String login_username = getIntent().getExtras().getString("login_username");
 
-        if (login_password.length() < 4 && login_password.length() > 0 ) {
+        if (login_password.length() < 6 && login_password.length() > 0 ) {
             password_error.setText("Password is invalid.");
             error_occurrence =true;
         }

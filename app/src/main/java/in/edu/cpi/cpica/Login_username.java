@@ -44,16 +44,6 @@ public class Login_username extends AppCompatActivity {
                 final EditText login_username_helper_roll_no = (EditText) helper_layout.findViewById(R.id.login_username_helper_roll_no);
                 final EditText login_username = (EditText) findViewById(R.id.login_username);
 
-                ArrayAdapter<String> class_adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item,
-                        getResources().getStringArray(R.array.Classes));
-                class_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                login_username_helper_class.setAdapter(class_adapter);
-
-
-                ArrayAdapter<String> division_adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item,
-                        getResources().getStringArray(R.array.Divisions));
-                division_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                login_username_helper_division.setAdapter(division_adapter);
 
                 username_helper.setPositiveButton("NEXT", new DialogInterface.OnClickListener() {
                     @Override

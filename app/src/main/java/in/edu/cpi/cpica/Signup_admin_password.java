@@ -32,8 +32,8 @@ public class Signup_admin_password extends AppCompatActivity {
         Vibrator buzzer = (Vibrator)this.getSystemService(Context.VIBRATOR_SERVICE);
         Boolean error_occurrence =false;
 
-        if (admin_password.length() < 4 && admin_password.length() > 0 ) {
-            password_error.setText("Password must be 4 digits long.");
+        if (admin_password.length() < 6 && admin_password.length() > 0 ) {
+            password_error.setText("Password must be 6 digits long.");
             error_occurrence =true;
         }
         else if (admin_password.length() < 1 ) {
