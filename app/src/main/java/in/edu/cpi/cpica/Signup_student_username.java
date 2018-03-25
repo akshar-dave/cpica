@@ -161,6 +161,7 @@ public class Signup_student_username extends AppCompatActivity {
             String email = getIntent().getExtras().getString("email");
             i.putExtra("student_username",student_username);
             i.putExtra("email",email);
+            finish();
             startActivity(i);
         }
 

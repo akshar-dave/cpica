@@ -62,12 +62,14 @@ public class Signup_usertype extends AppCompatActivity {
                     usertype_is="student";
                     Intent i = new Intent(Signup_usertype.this,Signup_email.class);
                     i.putExtra("usertype_is",usertype_is);
+                    finish();
                     startActivity(i);
                 }
                 else if(admin.isChecked()){
                     usertype_is="admin";
                     Intent i = new Intent(Signup_usertype.this,Signup_email.class);
                     i.putExtra("usertype_is",usertype_is);
+                    finish();
                     startActivity(i);
                 }
             }

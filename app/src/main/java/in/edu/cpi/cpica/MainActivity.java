@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseAuth firebaseAuth;
+
 
     @Override
 
@@ -28,8 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
+
 
 
         TextView welcome_text = (TextView)findViewById(R.id.welcome_text);

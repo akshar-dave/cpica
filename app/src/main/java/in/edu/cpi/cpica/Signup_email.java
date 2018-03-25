@@ -77,11 +77,13 @@ public class Signup_email extends AppCompatActivity {
                     if(usertype_is.equals("student")){
                         Intent i = new Intent(Signup_email.this,Signup_student_username.class);
                         i.putExtra("email",email);
+                        finish();
                         startActivity(i);
                     }
                     else if(usertype_is.equals("admin")){
                         Intent i = new Intent(Signup_email.this,Signup_admin_username.class);
                         i.putExtra("email",email);
+                        finish();
                         startActivity(i);
                     }
                 }
