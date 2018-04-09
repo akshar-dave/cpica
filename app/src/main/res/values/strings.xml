@@ -14,6 +14,11 @@
         <item>B</item>
     </array>
 
+    <array name="Gender">
+        <item>Gender</item>
+        <item>Female</item>
+        <item>Male</item>
+    </array>
 
     <string name="title_activity_dashboard">Dashboard</string>
 
