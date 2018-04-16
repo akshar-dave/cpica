@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -76,13 +77,23 @@ public class Signup_email extends AppCompatActivity {
                     String usertype_is = getIntent().getExtras().getString("usertype_is");
                     if(usertype_is.equals("student")){
                         Intent i = new Intent(Signup_email.this,Signup_student_username.class);
-                        i.putExtra("email",email);
-                        finish();
+
+                        SharedPreferences sharedPreferences = getSharedPreferences("Settings",Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                        editor.putString("email",email).apply();
+
+                        // i.putExtra("email",email);
                         startActivity(i);
                     }
                     else if(usertype_is.equals("admin")){
                         Intent i = new Intent(Signup_email.this,Signup_admin_username.class);
-                        i.putExtra("email",email);
+
+                        SharedPreferences sharedPreferences = getSharedPreferences("Settings",Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                        editor.putString("email",email).apply();
+                        //i.putExtra("email",email);
                         finish();
                         startActivity(i);
                     }

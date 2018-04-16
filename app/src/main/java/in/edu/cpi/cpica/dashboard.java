@@ -1,8 +1,10 @@
 package in.edu.cpi.cpica;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,9 +17,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 public class dashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,6 +57,16 @@ public class dashboard extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        Animation dashboard_bell_icon_anim = AnimationUtils.loadAnimation(this,R.anim.dashboard_bell_icon);
+        Animation dashboard_bell_off_icon_anim = AnimationUtils.loadAnimation(this,R.anim.dashboard_bell_off_icon);
+        ImageView dashboard_bell_off_icon = (ImageView)findViewById(R.id.dashboard_bell_off_icon);
+        ImageView dashboard_bell_icon = (ImageView)findViewById(R.id.dashboard_bell_icon);
+
+        dashboard_bell_off_icon.startAnimation(dashboard_bell_off_icon_anim);
+        dashboard_bell_icon.startAnimation(dashboard_bell_icon_anim);
+
+
     }
 
 
@@ -67,15 +84,25 @@ public class dashboard extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        String login_username = getIntent().getExtras().getString("login_username");
-        String student_username = getIntent().getExtras().getString("student_username");
-        TextView username = (TextView)findViewById(R.id.username);
-        if (student_username==null) {
-            username.setText(login_username);
+        //String login_username = getIntent().getExtras().getString("login_username");
+        //String student_username = getIntent().getExtras().getString("student_username");
+
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("username","");
+        String first_name = sharedPreferences.getString("first_name","");
+        TextView drawer_username = (TextView)findViewById(R.id.username);
+        TextView username_welcome_text = (TextView)findViewById(R.id.username_welcome_text);
+        drawer_username.setText(username);
+        if(first_name.length()>0) {
+            username_welcome_text.setText("Welcome,\n" + first_name+"!");
+        }
+
+        /*if (student_username==null) {
+            drawer_username.setText(username);
         }
         else{
-            username.setText(student_username);
-        }
+            drawer_username.setText(student_username);
+        }*/
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.dashboard, menu);
@@ -129,6 +156,18 @@ public class dashboard extends AppCompatActivity
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
+
+                SharedPreferences sharedPreferences = getSharedPreferences("Settings",MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.remove("first_name");
+                editor.remove("last_name");
+                editor.remove("username");
+                editor.remove("password");
+                editor.remove("gender");
+                editor.remove("email");
+                editor.apply();
+
                 Toast.makeText(getApplicationContext(),"You have been logged out successfully.",Toast.LENGTH_SHORT).show();
 
             }

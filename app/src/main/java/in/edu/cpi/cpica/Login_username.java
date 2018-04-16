@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -23,10 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Login_username extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_username);
+
+
+
 
         FloatingActionButton username_next_btn = (FloatingActionButton) findViewById(R.id.username_next_btn);
         Animation fab_zoom_in_anim;
@@ -115,6 +120,7 @@ public class Login_username extends AppCompatActivity {
     }
 
     public void open_password_page(View v) {
+
         TextView username_error = (TextView) findViewById(R.id.username_error);
         EditText login_username = (EditText) findViewById(R.id.login_username);
         FloatingActionButton username_next_btn = (FloatingActionButton) findViewById(R.id.username_next_btn);
@@ -220,7 +226,7 @@ public class Login_username extends AppCompatActivity {
         }
 
         //username text box validation ends here--
-        if (error_occurrence==false){  //there was no error
+        if (!error_occurrence){  //there was no error
             Intent i = new Intent(this, Login_password.class);
             i.putExtra("login_username",login_username.getText().toString());
             startActivity(i);
@@ -235,5 +241,9 @@ public class Login_username extends AppCompatActivity {
             username_error.setAlpha(1);
             username_next_btn.setRippleColor(Color.RED);
         }
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username",login_username.getText().toString());
+        editor.apply();
     }
 }

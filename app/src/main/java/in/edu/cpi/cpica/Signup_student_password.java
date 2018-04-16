@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -40,6 +41,10 @@ public class Signup_student_password extends AppCompatActivity {
     int verifycount;
     AlertDialog.Builder email_verification;
     String student_username;
+    String email,password,username;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+
 
     ProgressBar signup_student_password_progressbar;
     @Override
@@ -85,10 +90,19 @@ public class Signup_student_password extends AppCompatActivity {
         else{   //no error occurred.
             password_error.setAlpha(0);
             signup_student_next_btn.setRippleColor(Color.WHITE);
-            final String email = getIntent().getExtras().getString("email");
+
+            sharedPreferences = getSharedPreferences("Settings",Context.MODE_PRIVATE);
+            email = sharedPreferences.getString("email","");
+            username = sharedPreferences.getString("username","");
+            editor = sharedPreferences.edit();
+
+            editor.putString("password",student_password.getText().toString()).apply();
+            password = sharedPreferences.getString("password","");
+
+            //final String email = getIntent().getExtras().getString("email");
             signup_student_password_progressbar.setAlpha(1);
 
-            firebaseAuth.createUserWithEmailAndPassword(email,student_password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
@@ -105,7 +119,7 @@ public class Signup_student_password extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 signup_student_password_progressbar.setAlpha(1);
 
-                                firebaseAuth.signInWithEmailAndPassword(email,student_password.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                firebaseAuth.signInWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                     @Override
                                     public void onSuccess(AuthResult authResult) {
                                         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -113,16 +127,24 @@ public class Signup_student_password extends AppCompatActivity {
                                         signup_student_password_progressbar.setAlpha(0);
 
                                         if(isVerified){
-                                            Intent i = new Intent(getApplicationContext(), Student_dashboard.class);
-                                            student_username = getIntent().getExtras().getString("student_username");
-                                            i.putExtra("student_username",student_username);
-                                            finish();
-                                            startActivity(i);
+
+
+
+                                            //student_username = getIntent().getExtras().getString("student_username");
+                                            //i.putExtra("student_username",student_username);
+
+
+
+
+
+
 
                                             DatabaseReference user = firebaseDatabase.getReference("Students");
-                                            user.child(student_username).child("Email").setValue(email);
-                                            user.child(student_username).child("Password").setValue(student_password.getText().toString());
+                                            user.child(username).child("Email").setValue(email);
+                                            user.child(username).child("Password").setValue(password);
 
+                                            Intent i = new Intent(getApplicationContext(), Student_dashboard.class);
+                                            startActivity(i);
                                         }
                                         else{
                                             signup_student_password_progressbar.setAlpha(0);
@@ -147,9 +169,16 @@ public class Signup_student_password extends AppCompatActivity {
                                 Intent i = new Intent(getApplicationContext(),Signup_email.class);
                                 finish();
                                 firebaseUser.delete();
-                                DatabaseReference user = firebaseDatabase.getReference(student_username);
+                                DatabaseReference user = firebaseDatabase.getReference(username);
                                 user.removeValue();
+
+                                editor.remove("username");
+                                editor.remove("password");
+                                editor.remove("email");
+                                editor.apply();
+
                                 startActivity(i);
+                                finish();
                             }
                         });
 
@@ -170,9 +199,6 @@ public class Signup_student_password extends AppCompatActivity {
                                     }
                                 }
                             });
-
-                        }
-                        else{
 
                         }
 

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -158,10 +159,15 @@ public class Signup_student_username extends AppCompatActivity {
             show_message.show();
             signup_student_username_next_btn.setRippleColor(Color.WHITE);
             Intent i = new Intent(this,Signup_student_password.class);
-            String email = getIntent().getExtras().getString("email");
-            i.putExtra("student_username",student_username);
-            i.putExtra("email",email);
-            finish();
+
+            SharedPreferences sharedPreferences = getSharedPreferences("Settings",Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putString("username",student_username).apply();
+
+            //String email = getIntent().getExtras().getString("email");
+            //i.putExtra("student_username",student_username);
+            //i.putExtra("email",email);
             startActivity(i);
         }
 

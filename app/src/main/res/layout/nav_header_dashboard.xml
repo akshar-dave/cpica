@@ -26,7 +26,7 @@
         android:text="Welcome,\nUser!"
         android:textSize="10pt"
         android:textColor="#f9f9f9"
-        android:id="@+id/usersname"
+        android:id="@+id/username_welcome_text"
         android:layout_alignBottom="@+id/user_profile_icon"
         android:layout_alignStart="@+id/username"
         />
@@ -39,7 +39,7 @@
         android:paddingBottom="2dp"
         android:paddingRight="8dp"
         android:paddingLeft="8dp"
-        android:text="TYA16"
+        android:text="HIYA!"
         android:textAllCaps="true"
         android:textColor="#5C86BF"
         android:textSize="7.5pt"

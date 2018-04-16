@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Login_password extends AppCompatActivity {
 
@@ -67,15 +69,32 @@ public class Login_password extends AppCompatActivity {
             error_occurrence =false;
         }
 
-        if(error_occurrence==false){
+        if(!error_occurrence){
             if(login_username.toString().substring(0,3).contentEquals("CPI")){
                 Intent i = new Intent(this, Admin_dashboard.class);
+
+                SharedPreferences sharedPreferences = getSharedPreferences("Settings",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putString("password",login_password.getText().toString()).apply();
+
                 startActivity(i);
+                finish();
             }
             else{
-                Intent i = new Intent(this, Student_dashboard.class);
-                i.putExtra("login_username",login_username);
+                Intent i = new Intent(this, dashboard.class);
+                // i.putExtra("login_username",login_username);
+
+                SharedPreferences sharedPreferences = getSharedPreferences("Settings",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putString("password",login_password.getText().toString()).apply();
+
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 startActivity(i);
+                finish();
             }
             password_next_btn.setRippleColor(Color.WHITE);
             password_error.setAlpha(0);
