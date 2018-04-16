@@ -14,7 +14,8 @@
        android:text="No new notifications."
        android:textSize="10pt"
        android:layout_centerInParent="true"
-       android:paddingTop="30dp"/>
+       android:paddingTop="30dp"
+       android:id="@+id/dashboard_no_new_notifications"/>
 
     <ImageView
         android:layout_width="wrap_content"

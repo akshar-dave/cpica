@@ -60,11 +60,17 @@ public class dashboard extends AppCompatActivity
 
         Animation dashboard_bell_icon_anim = AnimationUtils.loadAnimation(this,R.anim.dashboard_bell_icon);
         Animation dashboard_bell_off_icon_anim = AnimationUtils.loadAnimation(this,R.anim.dashboard_bell_off_icon);
+        Animation fab_btn_anim = AnimationUtils.loadAnimation(this,R.anim.fab_btn_zoom_in);
         ImageView dashboard_bell_off_icon = (ImageView)findViewById(R.id.dashboard_bell_off_icon);
         ImageView dashboard_bell_icon = (ImageView)findViewById(R.id.dashboard_bell_icon);
+        TextView dashboard_no_new_notifications = (TextView)findViewById(R.id.dashboard_no_new_notifications);
+        Animation slow_fade_in_anim = AnimationUtils.loadAnimation(this,R.anim.slow_fade_in);
+
 
         dashboard_bell_off_icon.startAnimation(dashboard_bell_off_icon_anim);
         dashboard_bell_icon.startAnimation(dashboard_bell_icon_anim);
+        fab.startAnimation(fab_btn_anim);
+        dashboard_no_new_notifications.startAnimation(slow_fade_in_anim);
 
 
     }
