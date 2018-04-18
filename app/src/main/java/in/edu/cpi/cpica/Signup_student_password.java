@@ -111,7 +111,7 @@ public class Signup_student_password extends AppCompatActivity {
 
                         email_verification = new AlertDialog.Builder(Signup_student_password.this);
                         email_verification.setTitle("Verify your email");
-                        email_verification.setMessage("Please check your inbox for a verification mail and click on the link to complete verification.");
+                        email_verification.setMessage("Please check your inbox for a verification mail and click on the link to complete verification. The mail may take up to 2 minutes to arrive.");
                         email_verification.setIcon(R.drawable.email);
                         email_verification.setCancelable(false);
                         email_verification.setPositiveButton("VERIFY", new DialogInterface.OnClickListener() {
@@ -139,9 +139,10 @@ public class Signup_student_password extends AppCompatActivity {
 
 
 
-                                            DatabaseReference user = firebaseDatabase.getReference("Students");
+                                            DatabaseReference user = firebaseDatabase.getReference("Users");
                                             user.child(username).child("Email").setValue(email);
                                             user.child(username).child("Password").setValue(password);
+                                            user.child(username).child("User_type").setValue("STUDENT");
 
                                             Intent i = new Intent(getApplicationContext(), Student_dashboard.class);
                                             startActivity(i);

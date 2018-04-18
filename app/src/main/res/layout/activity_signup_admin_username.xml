@@ -29,7 +29,7 @@
         android:layout_marginTop="15dp" />
 
     <TextView
-        android:id="@+id/admin_username"
+        android:id="@+id/admin_username_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/signup_title"
@@ -41,7 +41,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:paddingTop="5dp"
-        android:text="cpi0"
+        android:text="(generating...)"
         android:textAlignment="center"
         android:textColor="#ffffff"
         android:textSize="10.5pt"
@@ -62,8 +62,7 @@
         android:elevation="6dp"
         android:background="#1e623d"
         android:backgroundTint="#1e623d"
-        app:rippleColor="#ffffff"
-        android:onClick="next"/>
+        app:rippleColor="#ffffff"/>
 
 
 </RelativeLayout>

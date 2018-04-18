@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -40,6 +41,9 @@ public class Signup_usertype extends AppCompatActivity {
     RadioButton student;
     RadioButton admin;
     String usertype_is="";
+    Boolean admin_signup_enabled;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,15 @@ public class Signup_usertype extends AppCompatActivity {
         usertype_next_btn.startAnimation(fab_zoom_in_anim);
         student = (RadioButton) findViewById(R.id.usertype_student);
         admin = (RadioButton) findViewById(R.id.usertype_admin);
+        sharedPreferences = getSharedPreferences("Settings",MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        editor.apply();
+        admin_signup_enabled = sharedPreferences.getBoolean("admin_signup_enabled",false);
 
+        if(admin_signup_enabled){
+            admin.setEnabled(true);
+            admin.setAlpha(1);
+        }
 
         usertype_next_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,14 +74,14 @@ public class Signup_usertype extends AppCompatActivity {
                     usertype_is="student";
                     Intent i = new Intent(Signup_usertype.this,Signup_email.class);
                     i.putExtra("usertype_is",usertype_is);
-                    finish();
+                    //finish();
                     startActivity(i);
                 }
                 else if(admin.isChecked()){
                     usertype_is="admin";
                     Intent i = new Intent(Signup_usertype.this,Signup_email.class);
                     i.putExtra("usertype_is",usertype_is);
-                    finish();
+                    //finish();
                     startActivity(i);
                 }
             }
@@ -136,6 +148,7 @@ public class Signup_usertype extends AppCompatActivity {
                             admin.setEnabled(true);
                             admin.setAlpha(1);
                             dialog2.cancel();
+                            editor.putBoolean("admin_signup_enabled",true).apply();
                             Toast.makeText(getApplicationContext(),"Admin signup has been enabled.", Toast.LENGTH_SHORT).show();
                         }
                         else if(enabler_password.length()<1){
@@ -167,7 +180,7 @@ public class Signup_usertype extends AppCompatActivity {
 
             }
         });
-        if(admin.isEnabled()==false){
+        if(!admin.isEnabled()){
             help_message.setNeutralButton("MORE",new DialogInterface.OnClickListener(){
                 public void onClick(DialogInterface dialog,int b) {
                     dialog.cancel();

@@ -19,6 +19,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class Signup_email extends AppCompatActivity {
 
     private FloatingActionButton signup_email_nextbtn;
@@ -28,11 +32,14 @@ public class Signup_email extends AppCompatActivity {
     private Animation fab_btn_error_anim;
     private Vibrator buzzer;
     Boolean error_occurrence = false;
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_email);
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         signup_email_nextbtn = (FloatingActionButton)findViewById(R.id.signup_email_nextbtn);
         signup_email_needhelp_btn = (TextView)findViewById(R.id.signup_email_needhelp_btn);
@@ -93,6 +100,10 @@ public class Signup_email extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
 
                         editor.putString("email",email).apply();
+
+                        firebaseAuth.signInWithEmailAndPassword("authuser@gmail.com","authpass");
+
+
                         //i.putExtra("email",email);
                         finish();
                         startActivity(i);

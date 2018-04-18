@@ -61,7 +61,7 @@ public class Student_dashboard extends AppCompatActivity {
                 String last_name = sharedPreferences.getString("last_name","");
                 String gender = sharedPreferences.getString("gender","");
 
-                DatabaseReference user = firebaseDatabase.getReference("Students");
+                DatabaseReference user = firebaseDatabase.getReference("Users");
                 user.child(username).child("First Name").setValue(first_name);
                 user.child(username).child("Last Name").setValue(last_name);
                 user.child(username).child("Gender").setValue(gender);

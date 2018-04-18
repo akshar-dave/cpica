@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         String password = sharedPreferences.getString("password","");
 
         if(username.length()>0 && password.length()>0) {
-            Intent i = new Intent(this,dashboard.class);
+            Intent i = new Intent(getApplicationContext(),dashboard.class);
             startActivity(i);
             finish();
         }
