@@ -49,6 +49,20 @@
         android:layout_toEndOf="@+id/user_profile_icon"
         android:layout_marginLeft="15dp"/>
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@drawable/verified"
+        android:textSize="7.5pt"
+        android:alpha="0.97"
+        android:id="@+id/username_badge"
+        android:clickable="false"
+        android:visibility="visible"
+        android:layout_marginStart="5dp"
+        android:layout_alignBottom="@+id/username"
+        android:layout_alignTop="@+id/user_profile_icon"
+        android:layout_toEndOf="@+id/username" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="40dp"

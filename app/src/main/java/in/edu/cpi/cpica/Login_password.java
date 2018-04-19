@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +35,9 @@ public class Login_password extends AppCompatActivity {
     Vibrator buzzer;
     Animation fab_btn_error_bounce,password_error_fade_anim;
     SharedPreferences sharedPreferences;
-    String username;
+    SharedPreferences.Editor editor;
+    String username,first_name,last_name;
+    String temp_password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,8 @@ public class Login_password extends AppCompatActivity {
 
 
         sharedPreferences = getSharedPreferences("Settings",Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        editor.apply();
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -66,6 +71,23 @@ public class Login_password extends AppCompatActivity {
             }
         });
 
+        username = sharedPreferences.getString("username","");
+
+        myref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dataSnapshot.getChildren();
+                temp_password = dataSnapshot.child(username).child("Password").getValue().toString();
+                first_name = dataSnapshot.child(username).child("First_name").getValue().toString();
+                last_name = dataSnapshot.child(username).child("Last_name").getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     public void check_login_password(View v){
@@ -78,7 +100,7 @@ public class Login_password extends AppCompatActivity {
         buzzer = (Vibrator)this.getSystemService(Context.VIBRATOR_SERVICE);
         //String login_username = getIntent().getExtras().getString("login_username");
 
-        username = sharedPreferences.getString("username","");
+
 
         if (login_password.length() < 6 && login_password.length() > 0 ) {
             password_error.setText("Password is incorrect. Please try again.");
@@ -93,65 +115,35 @@ public class Login_password extends AppCompatActivity {
         }
 
         if(!error_occurrence){
-            if(username.substring(0,3).contentEquals("CPI")){
-                Intent i = new Intent(this, Admin_dashboard.class);
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
+           if(login_password.getText().toString().equals(temp_password)){
 
-                editor.putString("password",login_password.getText().toString()).apply();
+               editor.putString("password",temp_password).apply();
+               editor.putString("first_name",first_name).apply();
+               editor.putString("last_name",last_name).apply();
 
-                startActivity(i);
-                finish();
-            }
-            else{
+               Intent i = new Intent(getApplicationContext(), dashboard.class);
+               i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+               i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+               startActivity(i);
+               finish();
 
-                myref.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String temp_password = dataSnapshot.child(username).child("Password").getValue().toString();
-                        if(login_password.getText().toString().equals(temp_password)){
-                            Intent i = new Intent(getApplicationContext(), dashboard.class);
-
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                            editor.putString("password",login_password.getText().toString()).apply();
-                            editor.putString("first_name",dataSnapshot.child(username).child("First Name").getValue().toString()).apply();
-                            editor.putString("last_name",dataSnapshot.child(username).child("Last Name").getValue().toString()).apply();
-
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                            startActivity(i);
-                            finish();
-                        }
-                        else{
-                            password_error.setText("Password is incorrect. Please try again.");
-                            long[] buzz_pattern= {0,30,70,20};
-                            buzzer.vibrate(buzz_pattern,-1);
-                            password_next_btn.startAnimation(fab_btn_error_bounce);
-                            password_error.startAnimation(password_error_fade_anim);
-                            password_error.setAlpha(1);
-                            password_next_btn.setRippleColor(Color.RED);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+           }
+           else{
+               password_error.setText("Password is incorrect. Please try again.");
+               long[] buzz_pattern= {0,30,70,20};
+               buzzer.vibrate(buzz_pattern,-1);
+               password_next_btn.startAnimation(fab_btn_error_bounce);
+               password_error.startAnimation(password_error_fade_anim);
+               password_error.setAlpha(1);
+               password_next_btn.setRippleColor(Color.RED);
+           }
 
 
-
-                // i.putExtra("login_username",login_username);
-
-
-            }
-            password_next_btn.setRippleColor(Color.WHITE);
-            password_error.setAlpha(0);
         }
         else{
+            password_error.setText("Password is incorrect. Please try again.");
             long[] buzz_pattern= {0,30,70,20};
             buzzer.vibrate(buzz_pattern,-1);
             password_next_btn.startAnimation(fab_btn_error_bounce);

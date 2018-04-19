@@ -1,14 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#ffffff">
+
+    <Button
+        android:id="@+id/try_beta_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TRY BETA FEATURES"
+        android:textSize="8.5pt"
+        android:background="@drawable/side_nav_bar"
+        android:textColor="#f9f9f9"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/profile"
+        android:id="@+id/setup_profile_icon"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/setup_profile_title"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Welcome!\nThis is the admin dashboard\nbut, the app is still in it's development stage."
-        android:layout_centerInParent="true"
-        android:id="@+id/center_text"/>
+        android:text="Set up your\nuser profile"
+        android:textAlignment="textStart"
+        android:textColor="#181818"
+        android:textSize="14pt"
+        android:layout_below="@+id/setup_profile_icon"
+        android:layout_alignStart="@+id/setup_profile_icon"
+        android:layout_marginTop="15dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="First name"
+        android:capitalize="words"
+        android:inputType="text"
+        android:maxLength="20"
+        android:id="@+id/setup_profile_firstname"
+        android:layout_marginTop="20dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="10dp"
+        android:textSize="8.5pt"
+        android:textColor="#212121"
+        android:layout_below="@+id/setup_profile_title"
+        android:layout_alignStart="@+id/setup_profile_title"
+        android:imeOptions="actionNext"
+        android:layout_marginEnd="20dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Last name"
+        android:capitalize="words"
+        android:inputType="text"
+        android:maxLength="20"
+        android:id="@+id/setup_profile_lastname"
+        android:layout_marginTop="5dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="10dp"
+        android:textSize="8.5pt"
+        android:textColor="#212121"
+        android:layout_below="@+id/setup_profile_firstname"
+        android:layout_alignStart="@+id/setup_profile_firstname"
+        android:imeOptions="actionNext"
+        android:layout_marginEnd="20dp"
+        />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/setup_profile_lastname"
+        android:layout_alignStart="@+id/setup_profile_lastname"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:entries="@array/Gender"
+        android:paddingBottom="15dp"
+        android:paddingTop="10dp"
+        android:textSize="8.5pt"
+        android:id="@+id/setup_profile_gender"/>
 
 </RelativeLayout>

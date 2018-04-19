@@ -337,9 +337,27 @@ public class Login_username extends AppCompatActivity {
                     startActivity(i);
                 }
                 else{
-                    username_error.setText("Seems like you haven't joined yet.\nPlease complete sign up process first.");
+                    username_error.setText("Please complete the sign up process.");
                     username_error.setAlpha(1);
                     username_progressbar.setAlpha(0);
+
+                    AlertDialog.Builder signup_incomplete_msg = new AlertDialog.Builder(Login_username.this);
+                    signup_incomplete_msg.setMessage("Seems like you have not joined yet. Please sign up to continue to the app.");
+                    signup_incomplete_msg.setTitle("Haven't joined?");
+                    signup_incomplete_msg.setPositiveButton("JOIN", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(getApplicationContext(),Signup_usertype.class));
+                        }
+                    });
+                    signup_incomplete_msg.setCancelable(false);
+                    signup_incomplete_msg.setNegativeButton("BACK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    signup_incomplete_msg.show();
                 }
 
             }

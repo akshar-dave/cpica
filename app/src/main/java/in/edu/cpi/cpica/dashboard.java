@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,7 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,10 +37,12 @@ public class dashboard extends AppCompatActivity
     FirebaseAuth firebaseAuth;
     DatabaseReference myref;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -110,6 +115,15 @@ public class dashboard extends AppCompatActivity
         drawer_username.setText(username);
         if(first_name.length()>0) {
             username_welcome_text.setText(first_name+"\n" + last_name);
+        }
+
+        RelativeLayout username_badge = (RelativeLayout)findViewById(R.id.username_badge);
+
+        if(username.contains("CPI")){
+            username_badge.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.admin_badge));
+        }
+        else{
+            username_badge.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.verified));
         }
 
 

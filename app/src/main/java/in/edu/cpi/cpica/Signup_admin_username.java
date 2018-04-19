@@ -89,6 +89,8 @@ public class Signup_admin_username extends AppCompatActivity {
                     editor.putString("username",temp_username.toUpperCase()).apply();
                     Intent i = new Intent(getApplicationContext(),Signup_admin_password.class);
                     startActivity(i);
+                    buzzer.cancel();
+                    finish();
                 }
 
             }
