@@ -7,7 +7,12 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="in.edu.cpi.cpica.dashboard"
     tools:showIn="@layout/app_bar_dashboard">
-
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/no_new_notifications_container"
+    android:visibility="visible"
+    android:layout_centerInParent="true">
    <TextView
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
@@ -32,5 +37,142 @@
         android:layout_centerInParent="true"
         android:paddingBottom="30dp"
         android:id="@+id/dashboard_bell_off_icon"/>
+</RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/dashboard_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fff"
+            android:alpha="0.95"
+            android:visibility="gone"
+            android:id="@+id/fab_shade">
+
+        </RelativeLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/logoGreen"
+            app:rippleColor="#f9f9f9"
+            android:backgroundTint="@color/logoGreen"
+            android:onClick="fab_onclick"
+            android:src="@drawable/add"
+            app:fabSize="normal"
+            android:elevation="0dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/attendance"
+            android:background="#fff"
+            android:backgroundTint="#fff"
+            app:rippleColor="@color/logoGreen"
+            app:fabSize="mini"
+            android:clickable="true"
+            android:id="@+id/mark_attendance_fab"
+            android:layout_above="@+id/add_results_fab"
+            android:layout_alignStart="@+id/add_results_fab"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            android:onClick="mark_attendance_fab_onclick"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/results"
+            android:background="#fff"
+            android:backgroundTint="#fff"
+            app:rippleColor="@color/logoGreen"
+            app:fabSize="mini"
+            android:clickable="true"
+            android:id="@+id/add_results_fab"
+            android:layout_above="@+id/new_announcement_fab"
+            android:layout_alignStart="@+id/new_announcement_fab"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            android:onClick="add_results_fab_onclick"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/announcement"
+            android:background="#fff"
+            android:backgroundTint="#fff"
+            app:rippleColor="@color/logoGreen"
+            app:fabSize="mini"
+            android:clickable="true"
+            android:id="@+id/new_announcement_fab"
+            android:layout_above="@+id/fab"
+            android:layout_alignEnd="@+id/fab"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            android:onClick="new_announcement_fab_onclick"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/fab_label"
+            android:text="Mark Attendance"
+            android:textColor="#f9f9f9"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:id="@+id/mark_attendance_fab_label"
+            android:layout_alignTop="@+id/mark_attendance_fab"
+            android:layout_toStartOf="@+id/mark_attendance_fab"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"
+            android:onClick="mark_attendance_fab_onclick"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/fab_label"
+            android:text="Add Results"
+            android:textColor="#f9f9f9"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:id="@+id/add_results_fab_label"
+            android:layout_below="@+id/mark_attendance_fab"
+            android:layout_toStartOf="@+id/add_results_fab"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"
+            android:onClick="add_results_fab_onclick"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/fab_label"
+            android:text="New Announcement"
+            android:textColor="#f9f9f9"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:id="@+id/new_announcement_fab_label"
+            android:layout_below="@+id/add_results_fab"
+            android:layout_toStartOf="@+id/new_announcement_fab"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"
+            android:onClick="new_announcement_fab_onclick"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

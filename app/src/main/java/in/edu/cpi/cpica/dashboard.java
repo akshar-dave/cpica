@@ -1,6 +1,7 @@
 package in.edu.cpi.cpica;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,23 +21,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class dashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    FloatingActionButton fab;
+    Boolean is_fab_open;
     FirebaseDatabase firebaseDatabase;
     FirebaseAuth firebaseAuth;
     DatabaseReference myref;
+    DatabaseReference notificationsref;
+    NotificationManager nm;
 
 
     @Override
@@ -43,22 +51,42 @@ public class dashboard extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        is_fab_open = false;
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         myref = firebaseDatabase.getReference("Users");
+        notificationsref = firebaseDatabase.getReference("Notifications");
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+
+        notificationsref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String notification_text,notification_title;
+                notification_text = dataSnapshot.child("notification_text").getValue().toString();
+                notification_title = dataSnapshot.child("notification_title").getValue().toString();
+                NotificationCompat.Builder notify1 = new NotificationCompat.Builder(getApplicationContext());
+                Integer uid = 1;
+                notify1.setAutoCancel(true);
+                notify1.setContentTitle(notification_title);
+                notify1.setContentText(notification_text);
+                notify1.setSmallIcon(R.drawable.logo);
+
+                nm.notify(uid,notify1.build());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -86,6 +114,20 @@ public class dashboard extends AppCompatActivity
         dashboard_no_new_notifications.startAnimation(slow_fade_in_anim);
 
 
+
+        //this will decide whether to remove the fab on start or not
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("username","");
+        if(username.contains("CPI")){
+            fab.setVisibility(View.VISIBLE);
+        }
+        else{
+            RelativeLayout dashboard_content = (RelativeLayout)findViewById(R.id.dashboard_content);
+            dashboard_content.removeView(fab);
+        }
+
+
+
     }
 
 
@@ -100,6 +142,8 @@ public class dashboard extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -201,6 +245,120 @@ public class dashboard extends AppCompatActivity
         dialog.show();
 
 
+    }
+
+    public void fab_onclick(View view){
+
+
+        final FloatingActionButton mark_attendance_fab,add_results_fab,new_announcement_fab;
+        final RelativeLayout fab_shade;
+        final TextView mark_attendance_fab_label,add_results_fab_label,new_announcement_fab_label;
+        final Animation fab_shade_show_anim,fab_shade_hide_anim,fab_open_anim,fab_close_anim,fab_btn_zoom_in_anim,fab_btn_zoom_out_anim,fab_btn_label_zoom_in_anim,fab_btn_label_zoom_out_anim;
+
+        mark_attendance_fab = (FloatingActionButton)findViewById(R.id.mark_attendance_fab);
+        add_results_fab = (FloatingActionButton)findViewById(R.id.add_results_fab);
+        new_announcement_fab = (FloatingActionButton)findViewById(R.id.new_announcement_fab);
+        fab_shade = (RelativeLayout)findViewById(R.id.fab_shade);
+        mark_attendance_fab_label = (TextView)findViewById(R.id.mark_attendance_fab_label);
+        add_results_fab_label = (TextView)findViewById(R.id.add_results_fab_label);
+        new_announcement_fab_label = (TextView)findViewById(R.id.new_announcement_fab_label);
+        fab_shade_show_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_shade_show);
+        fab_shade_hide_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_shade_hide);
+        fab_open_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
+        fab_close_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
+        fab_btn_zoom_in_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_btn_zoom_in);
+        fab_btn_zoom_out_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_btn_zoom_out);
+        fab_btn_label_zoom_in_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_btn_label_zoom_in);
+        fab_btn_label_zoom_out_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_btn_label_zoom_out);
+
+
+
+        if(!is_fab_open){
+
+            mark_attendance_fab.setVisibility(View.VISIBLE);
+            add_results_fab.setVisibility(View.VISIBLE);
+            new_announcement_fab.setVisibility(View.VISIBLE);
+            mark_attendance_fab_label.setVisibility(View.VISIBLE);
+            add_results_fab_label.setVisibility(View.VISIBLE);
+            new_announcement_fab_label.setVisibility(View.VISIBLE);
+            fab_shade.setVisibility(View.VISIBLE);
+
+            mark_attendance_fab.startAnimation(fab_btn_zoom_in_anim);
+            add_results_fab.startAnimation(fab_btn_zoom_in_anim);
+            new_announcement_fab.startAnimation(fab_btn_zoom_in_anim);
+            mark_attendance_fab_label.startAnimation(fab_btn_label_zoom_in_anim);
+            add_results_fab_label.startAnimation(fab_btn_label_zoom_in_anim);
+            new_announcement_fab_label.startAnimation(fab_btn_label_zoom_in_anim);
+            fab_shade.startAnimation(fab_shade_show_anim);
+            fab.startAnimation(fab_open_anim);
+
+            is_fab_open=true; //fab is now open
+        }
+        else if(is_fab_open){
+
+
+            mark_attendance_fab.startAnimation(fab_btn_zoom_out_anim);
+            add_results_fab.startAnimation(fab_btn_zoom_out_anim);
+            new_announcement_fab.startAnimation(fab_btn_zoom_out_anim);
+            mark_attendance_fab_label.startAnimation(fab_btn_label_zoom_out_anim);
+            add_results_fab_label.startAnimation(fab_btn_label_zoom_out_anim);
+            new_announcement_fab_label.startAnimation(fab_btn_label_zoom_out_anim);
+            fab_shade.startAnimation(fab_shade_hide_anim);
+            fab.startAnimation(fab_close_anim);
+
+            mark_attendance_fab.setVisibility(View.GONE);
+            add_results_fab.setVisibility(View.GONE);
+            new_announcement_fab.setVisibility(View.GONE);
+            mark_attendance_fab_label.setVisibility(View.GONE);
+            add_results_fab_label.setVisibility(View.GONE);
+            new_announcement_fab_label.setVisibility(View.GONE);
+            fab_shade.setVisibility(View.GONE);
+
+            is_fab_open=false; //fab has been closed
+        }
+
+        fab_shade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(is_fab_open){
+                    mark_attendance_fab.startAnimation(fab_btn_zoom_out_anim);
+                    add_results_fab.startAnimation(fab_btn_zoom_out_anim);
+                    new_announcement_fab.startAnimation(fab_btn_zoom_out_anim);
+                    mark_attendance_fab_label.startAnimation(fab_btn_label_zoom_out_anim);
+                    add_results_fab_label.startAnimation(fab_btn_label_zoom_out_anim);
+                    new_announcement_fab_label.startAnimation(fab_btn_label_zoom_out_anim);
+                    fab_shade.startAnimation(fab_shade_hide_anim);
+                    fab.startAnimation(fab_close_anim);
+
+                    mark_attendance_fab.setVisibility(View.GONE);
+                    add_results_fab.setVisibility(View.GONE);
+                    new_announcement_fab.setVisibility(View.GONE);
+                    mark_attendance_fab_label.setVisibility(View.GONE);
+                    add_results_fab_label.setVisibility(View.GONE);
+                    new_announcement_fab_label.setVisibility(View.GONE);
+                    fab_shade.setVisibility(View.GONE);
+
+                    is_fab_open=false; //fab has been closed
+                }
+
+            }
+        });
+
+    }
+
+    public void new_announcement_fab_onclick(View v){
+        //this handles click events for the NEW ANNOUNCEMENT BUTTON on dashboard
+
+        Intent i = new Intent(getApplicationContext(),New_notification.class);
+        startActivity(i);
+    }
+
+    public void mark_attendance_fab_onclick(View v){
+        //this handles click events for the MARK ATTENDANCE BUTTON on dashboard
+    }
+
+    public void add_results_fab_onclick(View v){
+        //this handles click events for the ADD RESULTS BUTTON on dashboard
     }
 
 }

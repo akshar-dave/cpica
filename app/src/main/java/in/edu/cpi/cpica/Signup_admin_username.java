@@ -36,6 +36,12 @@ public class Signup_admin_username extends AppCompatActivity {
     Vibrator buzzer;
 
     @Override
+    public void onBackPressed() {
+        editor.remove("email").apply();
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_admin_username);

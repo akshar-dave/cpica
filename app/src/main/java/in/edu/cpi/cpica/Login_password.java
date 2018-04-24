@@ -40,6 +40,14 @@ public class Login_password extends AppCompatActivity {
     String temp_password;
 
     @Override
+    public void onBackPressed() {
+        editor.remove("password").apply();
+        editor.remove("first_name").apply();
+        editor.remove("last_name").apply();
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_password);

@@ -32,9 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         String username = sharedPreferences.getString("username","");
+        String first_name = sharedPreferences.getString("first_name","");
         String password = sharedPreferences.getString("password","");
 
-        if(username.length()>0 && password.length()>0) {
+        if(username.length()>0 && password.length()>0 && first_name.length()>0) {
             Intent i = new Intent(getApplicationContext(),dashboard.class);
             startActivity(i);
             finish();

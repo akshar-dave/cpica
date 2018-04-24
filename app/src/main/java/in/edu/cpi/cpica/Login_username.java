@@ -41,6 +41,15 @@ public class Login_username extends AppCompatActivity {
     EditText login_username;
     TextView username_error;
     ProgressBar username_progressbar;
+    String email;
+
+    @Override
+    public void onBackPressed() {
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("email").apply();
+        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -324,7 +333,7 @@ public class Login_username extends AppCompatActivity {
                 dataSnapshot.getChildren();
                 String username = login_username.getText().toString();
                 if(dataSnapshot.child(username).hasChildren()){
-                    String email = dataSnapshot.child(username).child("Email").getValue().toString();
+                    email = dataSnapshot.child(username).child("Email").getValue().toString();
 
                     SharedPreferences sharedPreferences = getSharedPreferences("Settings",Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();

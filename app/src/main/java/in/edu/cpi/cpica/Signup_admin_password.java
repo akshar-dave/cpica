@@ -30,6 +30,11 @@ public class Signup_admin_password extends AppCompatActivity {
     String username;
     EditText admin_password;
 
+    @Override
+    public void onBackPressed() {
+        editor.remove("username").apply();
+        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +100,7 @@ public class Signup_admin_password extends AppCompatActivity {
             editor.remove("admin_username_int").apply();
 
             myref.child(username).child("Email").setValue(sharedPreferences.getString("email",""));
-            myref.child(username).child("Password").setValue(admin_password.getText().toString());
+            myref.child(username).child("Password").setValue(sharedPreferences.getString("password",""));
             myref.child(username).child("User_type").setValue("ADMIN");
 
             Intent i = new Intent(getApplicationContext(), Admin_dashboard.class);

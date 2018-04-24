@@ -167,7 +167,7 @@ public class Signup_student_password extends AppCompatActivity {
                         email_verification.setNegativeButton("BACK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(getApplicationContext(),Signup_email.class);
+                                Intent i = new Intent(getApplicationContext(),MainActivity.class);
                                 finish();
                                 firebaseUser.delete();
                                 DatabaseReference user = firebaseDatabase.getReference(username);
@@ -177,6 +177,7 @@ public class Signup_student_password extends AppCompatActivity {
                                 editor.remove("password");
                                 editor.remove("email");
                                 editor.apply();
+                                firebaseAuth.signOut();
 
                                 startActivity(i);
                                 finish();

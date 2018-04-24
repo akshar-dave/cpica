@@ -35,6 +35,12 @@ public class Admin_dashboard extends AppCompatActivity {
     String username,first_name,last_name,gender;
 
     @Override
+    public void onBackPressed() {
+        // cannot go back. needs to finish entering the details.
+        Toast.makeText(getApplicationContext(),"Please complete the sign up process.",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_dashboard);
