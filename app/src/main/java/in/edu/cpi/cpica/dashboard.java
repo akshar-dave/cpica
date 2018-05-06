@@ -1,7 +1,9 @@
 package in.edu.cpi.cpica;
 
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,6 +46,8 @@ public class dashboard extends AppCompatActivity
     DatabaseReference myref;
     DatabaseReference notificationsref;
     NotificationManager nm;
+    SharedPreferences sharedPreferences;
+    String notification_text,notification_title;
 
 
     @Override
@@ -55,30 +59,58 @@ public class dashboard extends AppCompatActivity
         is_fab_open = false;
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
 
         myref = firebaseDatabase.getReference("Users");
         notificationsref = firebaseDatabase.getReference("Notifications");
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
+
         notificationsref.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String notification_text,notification_title;
-                notification_text = dataSnapshot.child("notification_text").getValue().toString();
-                notification_title = dataSnapshot.child("notification_title").getValue().toString();
-                NotificationCompat.Builder notify1 = new NotificationCompat.Builder(getApplicationContext());
-                Integer uid = 1;
-                notify1.setAutoCancel(true);
-                notify1.setContentTitle(notification_title);
-                notify1.setContentText(notification_text);
-                notify1.setSmallIcon(R.drawable.logo);
+                String notification_count_string = Long.toString(dataSnapshot.getChildrenCount());
+                Integer notification_count = Integer.parseInt(notification_count_string);
 
-                nm.notify(uid,notify1.build());
+                Integer i;
+                for (i=1;i<=notification_count;i++){
+                    if(dataSnapshot.child(i.toString()).child("read_by").hasChild(sharedPreferences.getString("username",""))){
+                        Toast.makeText(getApplicationContext(),"Notification "+i.toString()+" is read.",Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        //Toast.makeText(getApplicationContext(),"Notification "+i.toString()+" was not read.",Toast.LENGTH_SHORT).show();
+
+                            dataSnapshot.getChildren();
+
+                            notification_text = dataSnapshot.child(i.toString()).child("notification_text").getValue().toString();
+                            notification_title = dataSnapshot.child(i.toString()).child("notification_title").getValue().toString();
+                            NotificationCompat.Builder notify1 = new NotificationCompat.Builder(getApplicationContext());
+                            notify1.setAutoCancel(true);
+                            notify1.setContentTitle(dataSnapshot.child(i.toString()).child("notification_title").getValue().toString());
+                            notify1.setContentText(dataSnapshot.child(i.toString()).child("notification_text").getValue().toString());
+                            notify1.setSmallIcon(R.drawable.logo);
+                            if(dataSnapshot.child(i.toString()).child("is_important").getValue().toString().equals("true")){
+                                notify1.setPriority(Notification.PRIORITY_MAX);
+                            }
+
+                            Intent open_activity_intent = new Intent(getApplicationContext(),Detailed_notification.class);
+                            Intent mark_as_read_intent = new Intent(getApplicationContext(),Detailed_notification.class);
+
+                            open_activity_intent.putExtra("notification_id",i.toString());
+                            PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(),0,open_activity_intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                            notify1.setContentIntent(open_activity_pi);
+
+                            nm.notify(i,notify1.build());
+
+
+                    }
+                }
+
             }
 
             @Override
@@ -86,6 +118,7 @@ public class dashboard extends AppCompatActivity
 
             }
         });
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -130,7 +163,9 @@ public class dashboard extends AppCompatActivity
 
     }
 
+public void mark_as_read(){
 
+}
 
 
     @Override
@@ -216,6 +251,7 @@ public class dashboard extends AppCompatActivity
                 Intent i = new Intent(getApplicationContext(),MainActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                finish();
                 startActivity(i);
 
                 SharedPreferences sharedPreferences = getSharedPreferences("Settings",MODE_PRIVATE);
@@ -348,7 +384,6 @@ public class dashboard extends AppCompatActivity
 
     public void new_announcement_fab_onclick(View v){
         //this handles click events for the NEW ANNOUNCEMENT BUTTON on dashboard
-
         Intent i = new Intent(getApplicationContext(),New_notification.class);
         startActivity(i);
     }

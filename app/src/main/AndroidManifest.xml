@@ -64,7 +64,14 @@
             android:name=".New_notification"
             android:label="New Announcement"
             android:parentActivityName=".dashboard"
-            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.edu.cpi.cpica.dashboard" />
+        </activity>
+        <activity android:name=".Detailed_notification"
+            android:parentActivityName=".dashboard"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

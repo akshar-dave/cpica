@@ -20,6 +20,7 @@
         <item>Male</item>
     </array>
 
+
     <string name="title_activity_dashboard">Dashboard</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
