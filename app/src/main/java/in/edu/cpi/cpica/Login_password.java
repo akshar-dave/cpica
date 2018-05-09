@@ -38,12 +38,20 @@ public class Login_password extends AppCompatActivity {
     SharedPreferences.Editor editor;
     String username,first_name,last_name;
     String temp_password;
+    ValueEventListener check_pass_listener;
 
     @Override
     public void onBackPressed() {
         editor.remove("password").apply();
         editor.remove("first_name").apply();
         editor.remove("last_name").apply();
+        try {
+            myref.removeEventListener(check_pass_listener);
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
+        finish();
         super.onBackPressed();
     }
 
@@ -67,7 +75,7 @@ public class Login_password extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder password_helper = new AlertDialog.Builder(Login_password.this);
-                password_helper.setMessage("Please contact your class mentor in order to reset your account password.");
+                password_helper.setMessage("Please contact your class mentor to get help with resetting your account password.");
                 password_helper.setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -81,7 +89,7 @@ public class Login_password extends AppCompatActivity {
 
         username = sharedPreferences.getString("username","");
 
-        myref.addValueEventListener(new ValueEventListener() {
+        check_pass_listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 dataSnapshot.getChildren();
@@ -94,7 +102,8 @@ public class Login_password extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        myref.addValueEventListener(check_pass_listener);
 
     }
 
@@ -124,29 +133,30 @@ public class Login_password extends AppCompatActivity {
 
         if(!error_occurrence){
 
-           if(login_password.getText().toString().equals(temp_password)){
+            if(login_password.getText().toString().equals(temp_password)){
 
-               editor.putString("password",temp_password).apply();
-               editor.putString("first_name",first_name).apply();
-               editor.putString("last_name",last_name).apply();
+                editor.putString("password",temp_password).apply();
+                editor.putString("first_name",first_name).apply();
+                editor.putString("last_name",last_name).apply();
 
-               Intent i = new Intent(getApplicationContext(), dashboard.class);
-               i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-               i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Intent i = new Intent(getApplicationContext(), dashboard.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-               startActivity(i);
-               finish();
+                startActivity(i);
+                myref.removeEventListener(check_pass_listener);
+                finish();
 
-           }
-           else{
-               password_error.setText("Password is incorrect. Please try again.");
-               long[] buzz_pattern= {0,30,70,20};
-               buzzer.vibrate(buzz_pattern,-1);
-               password_next_btn.startAnimation(fab_btn_error_bounce);
-               password_error.startAnimation(password_error_fade_anim);
-               password_error.setAlpha(1);
-               password_next_btn.setRippleColor(Color.RED);
-           }
+            }
+            else{
+                password_error.setText("Password is incorrect. Please try again.");
+                long[] buzz_pattern= {0,30,70,20};
+                buzzer.vibrate(buzz_pattern,-1);
+                password_next_btn.startAnimation(fab_btn_error_bounce);
+                password_error.startAnimation(password_error_fade_anim);
+                password_error.setAlpha(1);
+                password_next_btn.setRippleColor(Color.RED);
+            }
 
 
         }

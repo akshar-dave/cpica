@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -66,7 +67,7 @@ public class Admin_dashboard extends AppCompatActivity {
         try_beta_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(setup_profile_firstname.length() < 1 || setup_profile_lastname.length() < 1 || setup_profile_gender.getSelectedItem().toString().equals("Gender")){
+                if(TextUtils.isEmpty(setup_profile_firstname.getText().toString().trim()) || TextUtils.isEmpty(setup_profile_lastname.getText().toString().trim()) || setup_profile_gender.getSelectedItem().toString().equals("Gender")){
                     Toast.makeText(getApplicationContext(),"Please enter all details to proceed.",Toast.LENGTH_SHORT).show();
                 }
                 else{

@@ -34,10 +34,17 @@ public class Signup_admin_username extends AppCompatActivity {
     TextView admin_username_box;
     Animation bounce_anim,generating_admin_username_anim;
     Vibrator buzzer;
+    ValueEventListener admin_username_listener;
 
     @Override
     public void onBackPressed() {
         editor.remove("email").apply();
+        try{
+            settingsref.removeEventListener(admin_username_listener);
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
         super.onBackPressed();
     }
 
@@ -60,10 +67,9 @@ public class Signup_admin_username extends AppCompatActivity {
 
         admin_username_box.startAnimation(generating_admin_username_anim);
 
-        settingsref.addValueEventListener(new ValueEventListener() {
+        admin_username_listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 admin_username_int = dataSnapshot.child("admin_username_int").getValue().toString();
                 editor.putInt("admin_username_int",Integer.parseInt(admin_username_int));
 
@@ -72,15 +78,15 @@ public class Signup_admin_username extends AppCompatActivity {
                 generating_admin_username_anim.cancel();
                 admin_username_box.startAnimation(bounce_anim);
                 buzzer.vibrate(75);
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
 
+        settingsref.addValueEventListener(admin_username_listener);
 
 
         signup_admin_username_next_btn = (FloatingActionButton)findViewById(R.id.signup_admin_username_next_btn);
@@ -95,6 +101,7 @@ public class Signup_admin_username extends AppCompatActivity {
                     editor.putString("username",temp_username.toUpperCase()).apply();
                     Intent i = new Intent(getApplicationContext(),Signup_admin_password.class);
                     startActivity(i);
+                    settingsref.removeEventListener(admin_username_listener);
                     buzzer.cancel();
                     finish();
                 }

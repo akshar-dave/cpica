@@ -42,12 +42,21 @@ public class Login_username extends AppCompatActivity {
     TextView username_error;
     ProgressBar username_progressbar;
     String email;
+    ValueEventListener check_username_listener;
 
     @Override
     public void onBackPressed() {
         SharedPreferences sharedPreferences = getSharedPreferences("Settings",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove("email").apply();
+        try{
+            myref.removeEventListener(check_username_listener);
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
+        finish();
         super.onBackPressed();
     }
 
@@ -56,25 +65,9 @@ public class Login_username extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_username);
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        if(!activeNetworkInfo.isConnected()){
-            AlertDialog.Builder internet_error_msg = new AlertDialog.Builder(getApplicationContext());
-            internet_error_msg.setMessage("There seems to be some issue with you connection. Please try again later.");
-            internet_error_msg.setTitle("Something is wrong...");
-            internet_error_msg.setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                    finish();
-                }
-            });
-            internet_error_msg.show();
-        }
-        else{
+
             firebaseAuth = FirebaseAuth.getInstance();
-        }
+
 
 
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -85,18 +78,7 @@ public class Login_username extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(!task.isSuccessful()){
-                    AlertDialog.Builder internet_error_msg = new AlertDialog.Builder(getApplicationContext());
-                    internet_error_msg.setMessage("There seems to be some issue with you connection. Please try again later.");
-                    internet_error_msg.setTitle("Something is wrong...");
-                    internet_error_msg.setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                            finish();
-                        }
-                    });
-                    internet_error_msg.show();
+
                 }
             }
         });
@@ -327,7 +309,7 @@ public class Login_username extends AppCompatActivity {
 
         username_progressbar.setAlpha(1);
 
-        myref.addValueEventListener(new ValueEventListener() {
+        check_username_listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 dataSnapshot.getChildren();
@@ -344,6 +326,7 @@ public class Login_username extends AppCompatActivity {
 
                     Intent i = new Intent(getApplicationContext(), Login_password.class);
                     startActivity(i);
+                    myref.removeEventListener(check_username_listener);
                 }
                 else{
                     username_error.setText("Please complete the sign up process.");
@@ -357,6 +340,8 @@ public class Login_username extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             startActivity(new Intent(getApplicationContext(),Signup_usertype.class));
+                            myref.removeEventListener(check_username_listener);
+                            finish();
                         }
                     });
                     signup_incomplete_msg.setCancelable(false);
@@ -368,14 +353,15 @@ public class Login_username extends AppCompatActivity {
                     });
                     signup_incomplete_msg.show();
                 }
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+
+       myref.addValueEventListener(check_username_listener);
 
 
     }

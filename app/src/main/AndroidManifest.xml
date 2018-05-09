@@ -4,6 +4,7 @@
     //Permissions:
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     //App settings:
     <application
         android:allowBackup="true"
@@ -70,12 +71,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.edu.cpi.cpica.dashboard" />
         </activity>
-        <activity android:name=".Detailed_notification"
+        <activity
+            android:name=".Detailed_notification"
             android:parentActivityName=".dashboard"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.edu.cpi.cpica.dashboard" />
+        </activity>
+        <activity
+            android:name=".No_internet"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

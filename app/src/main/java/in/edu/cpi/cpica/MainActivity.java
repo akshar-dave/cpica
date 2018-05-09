@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Image;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -34,44 +36,58 @@ public class MainActivity extends AppCompatActivity {
         String username = sharedPreferences.getString("username","");
         String first_name = sharedPreferences.getString("first_name","");
         String password = sharedPreferences.getString("password","");
+        boolean connected_to_internet = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        if(username.length()>0 && password.length()>0 && first_name.length()>0) {
-            Intent i = new Intent(getApplicationContext(),dashboard.class);
+        connected_to_internet = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+
+        if(!connected_to_internet){
+            Intent i = new Intent(MainActivity.this,No_internet.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
-            finish();
         }
-        else {
-            TextView welcome_text = (TextView) findViewById(R.id.welcome_text);
-            ImageView logo = (ImageView) findViewById(R.id.main_logo);
-            LinearLayout bottom_buttons = (LinearLayout) findViewById(R.id.main_activity_bottom_buttons);
-            ImageView assignment_icon = (ImageView) findViewById(R.id.main_activity_assignment_icon);
-            ImageView announcement_icon = (ImageView) findViewById(R.id.main_activity_announcement_icon);
-            ImageView calendar_icon = (ImageView) findViewById(R.id.main_activity_calendar_icon);
-            ImageView class_icon = (ImageView) findViewById(R.id.main_activity_class_icon);
+        else if(connected_to_internet){
+            if(username.length()>0 && password.length()>0 && first_name.length()>0) {
+                Intent i = new Intent(getApplicationContext(),dashboard.class);
+                startActivity(i);
+                finish();
+            }
+            else {
+                TextView welcome_text = (TextView) findViewById(R.id.welcome_text);
+                ImageView logo = (ImageView) findViewById(R.id.main_logo);
+                LinearLayout bottom_buttons = (LinearLayout) findViewById(R.id.main_activity_bottom_buttons);
+                ImageView assignment_icon = (ImageView) findViewById(R.id.main_activity_assignment_icon);
+                ImageView announcement_icon = (ImageView) findViewById(R.id.main_activity_announcement_icon);
+                ImageView calendar_icon = (ImageView) findViewById(R.id.main_activity_calendar_icon);
+                ImageView class_icon = (ImageView) findViewById(R.id.main_activity_class_icon);
 
-            Animation logo_anim;
-            Animation welcome_text_anim;
-            Animation bottom_buttons_anim;
-            Animation assignment_icon_anim;
-            Animation announcement_icon_anim;
-            Animation calendar_icon_anim;
-            Animation class_icon_anim;
+                Animation logo_anim;
+                Animation welcome_text_anim;
+                Animation bottom_buttons_anim;
+                Animation assignment_icon_anim;
+                Animation announcement_icon_anim;
+                Animation calendar_icon_anim;
+                Animation class_icon_anim;
 
-            logo_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_logo);
-            welcome_text_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_welcome_text);
-            bottom_buttons_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_bottom_buttons);
-            assignment_icon_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_assignment_icon);
-            announcement_icon_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_announcement_icon);
-            calendar_icon_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_calendar_icon);
-            class_icon_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_class_icon);
-            logo.startAnimation(logo_anim);
-            welcome_text.startAnimation(welcome_text_anim);
-            bottom_buttons.startAnimation(bottom_buttons_anim);
-            assignment_icon.startAnimation(assignment_icon_anim);
-            announcement_icon.startAnimation(announcement_icon_anim);
-            calendar_icon.startAnimation(calendar_icon_anim);
-            class_icon.startAnimation(class_icon_anim);
+                logo_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_logo);
+                welcome_text_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_welcome_text);
+                bottom_buttons_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_bottom_buttons);
+                assignment_icon_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_assignment_icon);
+                announcement_icon_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_announcement_icon);
+                calendar_icon_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_calendar_icon);
+                class_icon_anim = AnimationUtils.loadAnimation(this, R.anim.main_activity_class_icon);
+                logo.startAnimation(logo_anim);
+                welcome_text.startAnimation(welcome_text_anim);
+                bottom_buttons.startAnimation(bottom_buttons_anim);
+                assignment_icon.startAnimation(assignment_icon_anim);
+                announcement_icon.startAnimation(announcement_icon_anim);
+                calendar_icon.startAnimation(calendar_icon_anim);
+                class_icon.startAnimation(class_icon_anim);
+            }
         }
+
+
 
     }
 

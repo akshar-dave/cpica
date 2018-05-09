@@ -12,7 +12,7 @@
         android:text="TRY BETA FEATURES"
         android:textSize="8.5pt"
         android:background="@drawable/side_nav_bar"
-        android:textColor="#f9f9f9"
+        android:textColor="#fff"
         android:textStyle="bold"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
@@ -44,8 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="First name"
-        android:capitalize="words"
-        android:inputType="text"
+        android:inputType="textCapWords"
         android:maxLength="20"
         android:id="@+id/setup_profile_firstname"
         android:layout_marginTop="20dp"
@@ -63,8 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Last name"
-        android:capitalize="words"
-        android:inputType="text"
+        android:inputType="textCapWords"
         android:maxLength="20"
         android:id="@+id/setup_profile_lastname"
         android:layout_marginTop="5dp"
@@ -74,7 +72,7 @@
         android:textColor="#212121"
         android:layout_below="@+id/setup_profile_firstname"
         android:layout_alignStart="@+id/setup_profile_firstname"
-        android:imeOptions="actionNext"
+        android:imeOptions="actionDone"
         android:layout_marginEnd="20dp"
         />
 

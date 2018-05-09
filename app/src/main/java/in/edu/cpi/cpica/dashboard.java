@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
@@ -24,6 +26,7 @@ import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +50,20 @@ public class dashboard extends AppCompatActivity
     DatabaseReference notificationsref;
     NotificationManager nm;
     SharedPreferences sharedPreferences;
-    String notification_text,notification_title;
+    RelativeLayout no_new_notifications_container;
+    String notification_text,notification_title,notification_color,sending_to;
+    ProgressBar dashboard_progressbar;
+    Animation dashboard_bell_icon_anim,dashboard_bell_off_icon_anim,fab_btn_anim,slow_fade_in_anim,slow_fade_out_anim;
+    ImageView dashboard_bell_off_icon,dashboard_bell_icon;
+    TextView dashboard_no_new_notifications;
+    NotificationCompat.Builder notify1;
+    Integer notification_count;
+    Integer read_notification_count=0;
+    Integer i;
+    String username;
+    ValueEventListener valuelistener1;
+    ConnectivityManager connectivityManager;
+    Boolean connected_to_internet;
 
 
     @Override
@@ -55,11 +71,31 @@ public class dashboard extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        //SystemClock.sleep(1000);
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         is_fab_open = false;
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        no_new_notifications_container = (RelativeLayout)findViewById(R.id.no_new_notifications_container);
+        dashboard_progressbar = (ProgressBar)findViewById(R.id.dashboard_progressbar);
+        dashboard_bell_icon_anim = AnimationUtils.loadAnimation(this,R.anim.dashboard_bell_icon);
+        dashboard_bell_off_icon_anim = AnimationUtils.loadAnimation(this,R.anim.dashboard_bell_off_icon);
+        fab_btn_anim = AnimationUtils.loadAnimation(this,R.anim.fab_btn_zoom_in);
+        dashboard_bell_off_icon = (ImageView)findViewById(R.id.dashboard_bell_off_icon);
+        dashboard_bell_icon = (ImageView)findViewById(R.id.dashboard_bell_icon);
+        dashboard_no_new_notifications = (TextView)findViewById(R.id.dashboard_no_new_notifications);
+        slow_fade_in_anim = AnimationUtils.loadAnimation(this,R.anim.slow_fade_in);
+        slow_fade_out_anim = AnimationUtils.loadAnimation(this,R.anim.slow_fade_out);
+        notify1 = new NotificationCompat.Builder(getApplicationContext());
+        notify1.setAutoCancel(true);
+        notify1.setSmallIcon(R.drawable.logo);
+        username = sharedPreferences.getString("username","");
+        connected_to_internet = false;
+        connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+
 
         myref = firebaseDatabase.getReference("Users");
         notificationsref = firebaseDatabase.getReference("Notifications");
@@ -68,58 +104,6 @@ public class dashboard extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-
-
-        notificationsref.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String notification_count_string = Long.toString(dataSnapshot.getChildrenCount());
-                Integer notification_count = Integer.parseInt(notification_count_string);
-
-                Integer i;
-                for (i=1;i<=notification_count;i++){
-                    if(dataSnapshot.child(i.toString()).child("read_by").hasChild(sharedPreferences.getString("username",""))){
-                        Toast.makeText(getApplicationContext(),"Notification "+i.toString()+" is read.",Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        //Toast.makeText(getApplicationContext(),"Notification "+i.toString()+" was not read.",Toast.LENGTH_SHORT).show();
-
-                            dataSnapshot.getChildren();
-
-                            notification_text = dataSnapshot.child(i.toString()).child("notification_text").getValue().toString();
-                            notification_title = dataSnapshot.child(i.toString()).child("notification_title").getValue().toString();
-                            NotificationCompat.Builder notify1 = new NotificationCompat.Builder(getApplicationContext());
-                            notify1.setAutoCancel(true);
-                            notify1.setContentTitle(dataSnapshot.child(i.toString()).child("notification_title").getValue().toString());
-                            notify1.setContentText(dataSnapshot.child(i.toString()).child("notification_text").getValue().toString());
-                            notify1.setSmallIcon(R.drawable.logo);
-                            if(dataSnapshot.child(i.toString()).child("is_important").getValue().toString().equals("true")){
-                                notify1.setPriority(Notification.PRIORITY_MAX);
-                            }
-
-                            Intent open_activity_intent = new Intent(getApplicationContext(),Detailed_notification.class);
-                            Intent mark_as_read_intent = new Intent(getApplicationContext(),Detailed_notification.class);
-
-                            open_activity_intent.putExtra("notification_id",i.toString());
-                            PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(),0,open_activity_intent,PendingIntent.FLAG_UPDATE_CURRENT);
-                            notify1.setContentIntent(open_activity_pi);
-
-                            nm.notify(i,notify1.build());
-
-
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -132,40 +116,141 @@ public class dashboard extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        Animation dashboard_bell_icon_anim = AnimationUtils.loadAnimation(this,R.anim.dashboard_bell_icon);
-        Animation dashboard_bell_off_icon_anim = AnimationUtils.loadAnimation(this,R.anim.dashboard_bell_off_icon);
-        Animation fab_btn_anim = AnimationUtils.loadAnimation(this,R.anim.fab_btn_zoom_in);
-        ImageView dashboard_bell_off_icon = (ImageView)findViewById(R.id.dashboard_bell_off_icon);
-        ImageView dashboard_bell_icon = (ImageView)findViewById(R.id.dashboard_bell_icon);
-        TextView dashboard_no_new_notifications = (TextView)findViewById(R.id.dashboard_no_new_notifications);
-        Animation slow_fade_in_anim = AnimationUtils.loadAnimation(this,R.anim.slow_fade_in);
-
-
-        dashboard_bell_off_icon.startAnimation(dashboard_bell_off_icon_anim);
-        dashboard_bell_icon.startAnimation(dashboard_bell_icon_anim);
-        fab.startAnimation(fab_btn_anim);
-        dashboard_no_new_notifications.startAnimation(slow_fade_in_anim);
-
-
-
         //this will decide whether to remove the fab on start or not
-        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
-        String username = sharedPreferences.getString("username","");
         if(username.contains("CPI")){
             fab.setVisibility(View.VISIBLE);
+            fab.startAnimation(fab_btn_anim);
         }
         else{
             RelativeLayout dashboard_content = (RelativeLayout)findViewById(R.id.dashboard_content);
             dashboard_content.removeView(fab);
         }
+        //----------------------------------------------------------
 
+        valuelistener1 = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dataSnapshot.getChildren();
+                //notification code goes here----------------------
+                String notification_count_string = Long.toString(dataSnapshot.getChildrenCount());
+                notification_count = Integer.parseInt(notification_count_string);
+
+                for(i=1;i<=notification_count;i++){
+                    sending_to = dataSnapshot.child(i.toString()).child("sending_to").getValue().toString();
+                    notification_text = dataSnapshot.child(i.toString()).child("notification_text").getValue().toString();
+                    notification_title = dataSnapshot.child(i.toString()).child("notification_title").getValue().toString();
+
+                    if(dataSnapshot.child(i.toString()).child("read_by").hasChild(username)){
+                        read_notification_count+=1;
+                    }
+                    else{ //this means the notification isn't read by this USERNAME.
+                        if(sending_to!=null && notification_title!=null && notification_text!=null){
+                            if(sending_to.equals("EVERYONE")){
+                                notify1.setContentTitle(notification_title);
+                                notify1.setContentText(notification_text);
+
+
+                                Intent open_activity_intent = new Intent(getApplicationContext(), Detailed_notification.class);
+
+                                open_activity_intent.putExtra("notification_id", i.toString());
+                                open_activity_intent.putExtra("notification_title",notification_title);
+                                open_activity_intent.putExtra("notification_text",notification_text);
+                                open_activity_intent.putExtra("notification_color",notification_color);
+
+                                PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(), i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                notify1.setContentIntent(open_activity_pi);
+                                nm.notify(i, notify1.build());
+                            }
+                            else{
+                                if(username.contains("CPI")){
+                                    if(sending_to.equals("ADMINS")){
+                                        notify1.setContentTitle(notification_title);
+                                        notify1.setContentText(notification_text);
+
+
+                                        Intent open_activity_intent = new Intent(getApplicationContext(), Detailed_notification.class);
+
+                                        open_activity_intent.putExtra("notification_id", i.toString());
+                                        open_activity_intent.putExtra("notification_title",notification_title);
+                                        open_activity_intent.putExtra("notification_text",notification_text);
+                                        open_activity_intent.putExtra("notification_color",notification_color);
+
+                                        PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(), i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                        notify1.setContentIntent(open_activity_pi);
+                                        nm.notify(i, notify1.build());
+                                    }
+                                    else{
+                                        read_notification_count += 1;
+                                    }
+                                }
+                                else{ //if username isn't containing CPI---
+                                    if(username.contains("FYA") || username.contains("FYB") || username.contains("SYA") || username.contains("SYB")  || username.contains("TYA") || username.contains("TYB")){
+                                        if(sending_to.equals("STUDENTS")){
+                                            notify1.setContentTitle(notification_title);
+                                            notify1.setContentText(notification_text);
+
+
+                                            Intent open_activity_intent = new Intent(getApplicationContext(), Detailed_notification.class);
+
+                                            open_activity_intent.putExtra("notification_id", i.toString());
+                                            open_activity_intent.putExtra("notification_title",notification_title);
+                                            open_activity_intent.putExtra("notification_text",notification_text);
+                                            open_activity_intent.putExtra("notification_color",notification_color);
+
+                                            PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(),i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                            notify1.setContentIntent(open_activity_pi);
+                                            nm.notify(i, notify1.build());
+                                        }
+                                        else{
+                                            read_notification_count += 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(read_notification_count.equals(notification_count)){ // means there are no new notifications.
+                    dashboard_progressbar.startAnimation(slow_fade_out_anim);
+                    no_new_notifications_container.setVisibility(View.VISIBLE);
+
+                    dashboard_bell_off_icon.startAnimation(dashboard_bell_off_icon_anim);
+                    dashboard_bell_icon.startAnimation(dashboard_bell_icon_anim);
+                    dashboard_no_new_notifications.setText("No new notifications.");
+                    dashboard_no_new_notifications.startAnimation(slow_fade_in_anim);
+                }
+                else{
+                    dashboard_progressbar.startAnimation(slow_fade_out_anim);
+                    no_new_notifications_container.setVisibility(View.VISIBLE);
+                    dashboard_bell_icon.setVisibility(View.VISIBLE);
+                    dashboard_bell_off_icon.setVisibility(View.INVISIBLE);
+                    dashboard_bell_off_icon_anim.cancel();
+                    dashboard_bell_icon_anim.cancel();
+
+                    if((notification_count-read_notification_count)==1){
+                        dashboard_no_new_notifications.setText((notification_count-read_notification_count)+" unread notification.");
+                    }
+                    else{
+                        dashboard_no_new_notifications.setText((notification_count-read_notification_count)+" unread notifications.");
+                    }
+
+                    dashboard_no_new_notifications.startAnimation(slow_fade_in_anim);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        notificationsref.addValueEventListener(valuelistener1);
 
 
     }
 
-public void mark_as_read(){
 
-}
 
 
     @Override
@@ -264,7 +349,7 @@ public void mark_as_read(){
                 editor.remove("gender");
                 editor.remove("email");
                 editor.apply();
-
+                nm.cancelAll();
                 Toast.makeText(getApplicationContext(),"You have been logged out successfully.",Toast.LENGTH_SHORT).show();
 
             }
@@ -311,6 +396,14 @@ public void mark_as_read(){
 
         if(!is_fab_open){
 
+            mark_attendance_fab.setClickable(true);
+            add_results_fab.setClickable(true);
+            new_announcement_fab.setClickable(true);
+            mark_attendance_fab_label.setClickable(true);
+            add_results_fab_label.setClickable(true);
+            new_announcement_fab_label.setClickable(true);
+            fab_shade.setClickable(true);
+
             mark_attendance_fab.setVisibility(View.VISIBLE);
             add_results_fab.setVisibility(View.VISIBLE);
             new_announcement_fab.setVisibility(View.VISIBLE);
@@ -332,6 +425,13 @@ public void mark_as_read(){
         }
         else if(is_fab_open){
 
+            mark_attendance_fab.setClickable(false);
+            add_results_fab.setClickable(false);
+            new_announcement_fab.setClickable(false);
+            mark_attendance_fab_label.setClickable(false);
+            add_results_fab_label.setClickable(false);
+            new_announcement_fab_label.setClickable(false);
+            fab_shade.setClickable(false);
 
             mark_attendance_fab.startAnimation(fab_btn_zoom_out_anim);
             add_results_fab.startAnimation(fab_btn_zoom_out_anim);
@@ -357,6 +457,14 @@ public void mark_as_read(){
             @Override
             public void onClick(View v) {
                 if(is_fab_open){
+                    mark_attendance_fab.setClickable(false);
+                    add_results_fab.setClickable(false);
+                    new_announcement_fab.setClickable(false);
+                    mark_attendance_fab_label.setClickable(false);
+                    add_results_fab_label.setClickable(false);
+                    new_announcement_fab_label.setClickable(false);
+                    fab_shade.setClickable(false);
+
                     mark_attendance_fab.startAnimation(fab_btn_zoom_out_anim);
                     add_results_fab.startAnimation(fab_btn_zoom_out_anim);
                     new_announcement_fab.startAnimation(fab_btn_zoom_out_anim);
@@ -384,8 +492,10 @@ public void mark_as_read(){
 
     public void new_announcement_fab_onclick(View v){
         //this handles click events for the NEW ANNOUNCEMENT BUTTON on dashboard
+        notificationsref.removeEventListener(valuelistener1);
         Intent i = new Intent(getApplicationContext(),New_notification.class);
         startActivity(i);
+        finish();
     }
 
     public void mark_attendance_fab_onclick(View v){
