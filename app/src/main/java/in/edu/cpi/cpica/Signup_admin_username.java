@@ -86,7 +86,7 @@ public class Signup_admin_username extends AppCompatActivity {
             }
         };
 
-        settingsref.addValueEventListener(admin_username_listener);
+        settingsref.addListenerForSingleValueEvent(admin_username_listener);
 
 
         signup_admin_username_next_btn = (FloatingActionButton)findViewById(R.id.signup_admin_username_next_btn);

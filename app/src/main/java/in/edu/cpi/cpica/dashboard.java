@@ -8,9 +8,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
@@ -50,7 +53,7 @@ public class dashboard extends AppCompatActivity
     DatabaseReference notificationsref;
     NotificationManager nm;
     SharedPreferences sharedPreferences;
-    RelativeLayout no_new_notifications_container;
+    RelativeLayout no_new_notifications_container,dashboard_content;
     String notification_text,notification_title,notification_color,sending_to;
     ProgressBar dashboard_progressbar;
     Animation dashboard_bell_icon_anim,dashboard_bell_off_icon_anim,fab_btn_anim,slow_fade_in_anim,slow_fade_out_anim;
@@ -78,8 +81,11 @@ public class dashboard extends AppCompatActivity
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        dashboard_content = (RelativeLayout)findViewById(R.id.dashboard_content);
         no_new_notifications_container = (RelativeLayout)findViewById(R.id.no_new_notifications_container);
         dashboard_progressbar = (ProgressBar)findViewById(R.id.dashboard_progressbar);
+        dashboard_progressbar.getIndeterminateDrawable().setColorFilter(Color.parseColor("#3f51b5"), PorterDuff.Mode.SRC_IN);
+
         dashboard_bell_icon_anim = AnimationUtils.loadAnimation(this,R.anim.dashboard_bell_icon);
         dashboard_bell_off_icon_anim = AnimationUtils.loadAnimation(this,R.anim.dashboard_bell_off_icon);
         fab_btn_anim = AnimationUtils.loadAnimation(this,R.anim.fab_btn_zoom_in);
@@ -91,11 +97,10 @@ public class dashboard extends AppCompatActivity
         notify1 = new NotificationCompat.Builder(getApplicationContext());
         notify1.setAutoCancel(true);
         notify1.setSmallIcon(R.drawable.logo);
+        notify1.setVibrate(new long[] {50});
         username = sharedPreferences.getString("username","");
         connected_to_internet = false;
         connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-
-
 
         myref = firebaseDatabase.getReference("Users");
         notificationsref = firebaseDatabase.getReference("Notifications");
@@ -127,6 +132,17 @@ public class dashboard extends AppCompatActivity
         }
         //----------------------------------------------------------
 
+        dashboard_content.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                notificationsref.removeEventListener(valuelistener1);
+                startActivity(new Intent(getApplicationContext(),Overview_notification.class));
+                finish();
+
+                return true;
+            }
+        });
+
         valuelistener1 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -135,57 +151,36 @@ public class dashboard extends AppCompatActivity
                 String notification_count_string = Long.toString(dataSnapshot.getChildrenCount());
                 notification_count = Integer.parseInt(notification_count_string);
 
-                for(i=1;i<=notification_count;i++){
-                    sending_to = dataSnapshot.child(i.toString()).child("sending_to").getValue().toString();
-                    notification_text = dataSnapshot.child(i.toString()).child("notification_text").getValue().toString();
-                    notification_title = dataSnapshot.child(i.toString()).child("notification_title").getValue().toString();
+                try{
+                    for(i=1;i<=notification_count;i++){
+                        sending_to = dataSnapshot.child(i.toString()).child("sending_to").getValue().toString();
+                        notification_text = dataSnapshot.child(i.toString()).child("notification_text").getValue().toString();
+                        notification_title = dataSnapshot.child(i.toString()).child("notification_title").getValue().toString();
 
-                    if(dataSnapshot.child(i.toString()).child("read_by").hasChild(username)){
-                        read_notification_count+=1;
-                    }
-                    else{ //this means the notification isn't read by this USERNAME.
-                        if(sending_to!=null && notification_title!=null && notification_text!=null){
-                            if(sending_to.equals("EVERYONE")){
-                                notify1.setContentTitle(notification_title);
-                                notify1.setContentText(notification_text);
-
-
-                                Intent open_activity_intent = new Intent(getApplicationContext(), Detailed_notification.class);
-
-                                open_activity_intent.putExtra("notification_id", i.toString());
-                                open_activity_intent.putExtra("notification_title",notification_title);
-                                open_activity_intent.putExtra("notification_text",notification_text);
-                                open_activity_intent.putExtra("notification_color",notification_color);
-
-                                PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(), i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                                notify1.setContentIntent(open_activity_pi);
-                                nm.notify(i, notify1.build());
-                            }
-                            else{
-                                if(username.contains("CPI")){
-                                    if(sending_to.equals("ADMINS")){
-                                        notify1.setContentTitle(notification_title);
-                                        notify1.setContentText(notification_text);
+                        if(dataSnapshot.child(i.toString()).child("read_by").hasChild(username)){
+                            read_notification_count+=1;
+                        }
+                        else{ //this means the notification isn't read by this USERNAME.
+                            if(sending_to!=null && notification_title!=null && notification_text!=null){
+                                if(sending_to.equals("EVERYONE")){
+                                    notify1.setContentTitle(notification_title);
+                                    notify1.setContentText(notification_text);
 
 
-                                        Intent open_activity_intent = new Intent(getApplicationContext(), Detailed_notification.class);
+                                    Intent open_activity_intent = new Intent(getApplicationContext(), Detailed_notification.class);
 
-                                        open_activity_intent.putExtra("notification_id", i.toString());
-                                        open_activity_intent.putExtra("notification_title",notification_title);
-                                        open_activity_intent.putExtra("notification_text",notification_text);
-                                        open_activity_intent.putExtra("notification_color",notification_color);
+                                    open_activity_intent.putExtra("notification_id", i.toString());
+                                    open_activity_intent.putExtra("notification_title",notification_title);
+                                    open_activity_intent.putExtra("notification_text",notification_text);
+                                    open_activity_intent.putExtra("notification_color",notification_color);
 
-                                        PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(), i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                                        notify1.setContentIntent(open_activity_pi);
-                                        nm.notify(i, notify1.build());
-                                    }
-                                    else{
-                                        read_notification_count += 1;
-                                    }
+                                    PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(), i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                    notify1.setContentIntent(open_activity_pi);
+                                    nm.notify(i, notify1.build());
                                 }
-                                else{ //if username isn't containing CPI---
-                                    if(username.contains("FYA") || username.contains("FYB") || username.contains("SYA") || username.contains("SYB")  || username.contains("TYA") || username.contains("TYB")){
-                                        if(sending_to.equals("STUDENTS")){
+                                else{
+                                    if(username.contains("CPI")){
+                                        if(sending_to.equals("ADMINS")){
                                             notify1.setContentTitle(notification_title);
                                             notify1.setContentText(notification_text);
 
@@ -197,7 +192,7 @@ public class dashboard extends AppCompatActivity
                                             open_activity_intent.putExtra("notification_text",notification_text);
                                             open_activity_intent.putExtra("notification_color",notification_color);
 
-                                            PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(),i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                            PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(), i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
                                             notify1.setContentIntent(open_activity_pi);
                                             nm.notify(i, notify1.build());
                                         }
@@ -205,10 +200,37 @@ public class dashboard extends AppCompatActivity
                                             read_notification_count += 1;
                                         }
                                     }
+                                    else{ //if username isn't containing CPI---
+                                        if(username.contains("FYA") || username.contains("FYB") || username.contains("SYA") || username.contains("SYB")  || username.contains("TYA") || username.contains("TYB")){
+                                            if(sending_to.equals("STUDENTS")){
+                                                notify1.setContentTitle(notification_title);
+                                                notify1.setContentText(notification_text);
+
+
+                                                Intent open_activity_intent = new Intent(getApplicationContext(), Detailed_notification.class);
+
+                                                open_activity_intent.putExtra("notification_id", i.toString());
+                                                open_activity_intent.putExtra("notification_title",notification_title);
+                                                open_activity_intent.putExtra("notification_text",notification_text);
+                                                open_activity_intent.putExtra("notification_color",notification_color);
+
+                                                PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(),i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                                notify1.setContentIntent(open_activity_pi);
+                                                nm.notify(i, notify1.build());
+                                            }
+                                            else{
+                                                read_notification_count += 1;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
+                }
+                catch (NullPointerException e){
+                    e.printStackTrace();
+                    finish();
                 }
 
                 if(read_notification_count.equals(notification_count)){ // means there are no new notifications.
@@ -228,11 +250,16 @@ public class dashboard extends AppCompatActivity
                     dashboard_bell_off_icon_anim.cancel();
                     dashboard_bell_icon_anim.cancel();
 
-                    if((notification_count-read_notification_count)==1){
-                        dashboard_no_new_notifications.setText((notification_count-read_notification_count)+" unread notification.");
-                    }
+                    if(notification_count-read_notification_count<0){
+                        finish();
+                         }
                     else{
-                        dashboard_no_new_notifications.setText((notification_count-read_notification_count)+" unread notifications.");
+                        if((notification_count-read_notification_count)==1){
+                            dashboard_no_new_notifications.setText((notification_count-read_notification_count)+" unread notification.");
+                        }
+                        else{
+                            dashboard_no_new_notifications.setText((notification_count-read_notification_count)+" unread notifications.");
+                        }
                     }
 
                     dashboard_no_new_notifications.startAnimation(slow_fade_in_anim);
@@ -251,8 +278,6 @@ public class dashboard extends AppCompatActivity
     }
 
 
-
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -262,7 +287,6 @@ public class dashboard extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
 
 
     @Override
@@ -304,7 +328,6 @@ public class dashboard extends AppCompatActivity
     }
 
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -312,7 +335,10 @@ public class dashboard extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_notifications) {
-            Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
+            notificationsref.removeEventListener(valuelistener1);
+            startActivity(new Intent(getApplicationContext(),Overview_notification.class));
+            finish();
+            //Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_assignments) {
             Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_results) {
@@ -365,11 +391,9 @@ public class dashboard extends AppCompatActivity
         AlertDialog dialog = logout_confirmation.create();
         dialog.show();
 
-
     }
 
     public void fab_onclick(View view){
-
 
         final FloatingActionButton mark_attendance_fab,add_results_fab,new_announcement_fab;
         final RelativeLayout fab_shade;
@@ -391,8 +415,6 @@ public class dashboard extends AppCompatActivity
         fab_btn_zoom_out_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_btn_zoom_out);
         fab_btn_label_zoom_in_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_btn_label_zoom_in);
         fab_btn_label_zoom_out_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_btn_label_zoom_out);
-
-
 
         if(!is_fab_open){
 
@@ -484,7 +506,6 @@ public class dashboard extends AppCompatActivity
 
                     is_fab_open=false; //fab has been closed
                 }
-
             }
         });
 
@@ -507,8 +528,3 @@ public class dashboard extends AppCompatActivity
     }
 
 }
-
-
-
-
-

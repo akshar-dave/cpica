@@ -9,15 +9,15 @@
     tools:showIn="@layout/app_bar_dashboard">
 
     <ProgressBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="@dimen/nav_header_height"
-        android:layout_marginEnd="@dimen/nav_header_height"
-        android:indeterminate="true"
-        android:id="@+id/dashboard_progressbar"
-        style="?android:attr/progressBarStyleHorizontal"
-        />
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_marginStart="@dimen/nav_header_height"
+    android:layout_marginEnd="@dimen/nav_header_height"
+    android:indeterminate="true"
+    android:id="@+id/dashboard_progressbar"
+    style="?android:attr/progressBarStyleHorizontal"
+    />
 
 <RelativeLayout
     android:layout_width="wrap_content"
@@ -33,7 +33,9 @@
        android:textSize="10pt"
        android:layout_centerInParent="true"
        android:paddingTop="30dp"
+
        android:id="@+id/dashboard_no_new_notifications"/>
+
 
     <ImageView
         android:layout_width="wrap_content"
@@ -51,6 +53,18 @@
         android:paddingBottom="30dp"
         android:id="@+id/dashboard_bell_off_icon"/>
 </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#CC999999"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:textSize="12dp"
+        android:layout_below="@+id/no_new_notifications_container"
+        android:text="Long-press anywhere to\nview all notifications"/>
+
 
     <RelativeLayout
         android:layout_width="match_parent"

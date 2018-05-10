@@ -86,6 +86,9 @@ public class Login_username extends AppCompatActivity {
         login_username = (EditText) findViewById(R.id.login_username);
         username_error = (TextView) findViewById(R.id.username_error);
 
+        login_username.requestFocus();
+        login_username.setSelected(true);
+
         FloatingActionButton username_next_btn = (FloatingActionButton) findViewById(R.id.username_next_btn);
         Animation fab_zoom_in_anim;
         fab_zoom_in_anim = AnimationUtils.loadAnimation(this, R.anim.fab_btn_zoom_in);
@@ -361,7 +364,7 @@ public class Login_username extends AppCompatActivity {
             }
         };
 
-       myref.addValueEventListener(check_username_listener);
+       myref.addListenerForSingleValueEvent(check_username_listener);
 
 
     }

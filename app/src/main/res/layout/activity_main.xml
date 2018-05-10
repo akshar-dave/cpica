@@ -31,7 +31,6 @@
         android:layout_height="50dp"
         android:layout_weight="1"
         android:background="#f8f8f8"
-        android:onClick="opensignuppage"
         android:text="JOIN"
         android:textSize="8pt" />
 
@@ -41,7 +40,6 @@
         android:layout_height="50dp"
         android:layout_weight="1"
         android:background="#f8f8f8"
-        android:onClick="openloginpage"
         android:text="LOG IN"
         android:textSize="8pt" />
 

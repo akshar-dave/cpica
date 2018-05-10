@@ -24,7 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-
+Button login_btn,join_btn;
 
     @Override
 
@@ -38,6 +38,26 @@ public class MainActivity extends AppCompatActivity {
         String password = sharedPreferences.getString("password","");
         boolean connected_to_internet = false;
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        login_btn = (Button)findViewById(R.id.login_btn);
+        join_btn = (Button)findViewById(R.id.join_btn);
+
+        login_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),Login_username.class);
+                startActivity(i);
+            }
+        });
+
+        join_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),Signup_usertype.class);
+                startActivity(i);
+            }
+        });
+
+
 
         connected_to_internet = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
 
@@ -92,15 +112,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void openloginpage(View v){
-        Intent i = new Intent(this,Login_username.class);
-        startActivity(i);
-    }
 
-    public void opensignuppage(View v){
-        Intent i = new Intent(this,Signup_usertype.class);
-        startActivity(i);
-    }
 
     public void show_assignment_icon_toast(View v){
        TextView toast_msg = new TextView(this);

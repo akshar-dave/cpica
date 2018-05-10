@@ -29,6 +29,8 @@
         android:id="@+id/username_welcome_text"
         android:layout_alignBottom="@+id/user_profile_icon"
         android:layout_alignStart="@+id/username"
+        android:maxLines="2"
+        android:ellipsize="end"
         />
 
     <TextView

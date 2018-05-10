@@ -67,8 +67,13 @@ public class Login_password extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        login_password = (EditText) findViewById(R.id.login_password);
+
 
         myref = firebaseDatabase.getReference("Users");
+
+        login_password.requestFocus();
+        login_password.setSelected(true);
 
         TextView forgot_password_btn = (TextView)findViewById(R.id.forgot_password_btn);
         forgot_password_btn.setOnClickListener(new View.OnClickListener() {
@@ -103,12 +108,12 @@ public class Login_password extends AppCompatActivity {
 
             }
         };
-        myref.addValueEventListener(check_pass_listener);
+       myref.addListenerForSingleValueEvent(check_pass_listener);
 
     }
 
     public void check_login_password(View v){
-        login_password = (EditText) findViewById(R.id.login_password);
+
         password_error = (TextView) findViewById(R.id.password_error);
         password_next_btn = (FloatingActionButton)findViewById(R.id.password_next_btn);
         Boolean error_occurrence;

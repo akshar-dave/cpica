@@ -83,6 +83,9 @@
             android:name=".No_internet"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".Overview_notification"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
