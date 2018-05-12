@@ -102,6 +102,8 @@ public class dashboard extends AppCompatActivity
         connected_to_internet = false;
         connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
+
+
         myref = firebaseDatabase.getReference("Users");
         notificationsref = firebaseDatabase.getReference("Notifications");
 
@@ -273,6 +275,7 @@ public class dashboard extends AppCompatActivity
         };
 
         notificationsref.addValueEventListener(valuelistener1);
+
 
 
     }
