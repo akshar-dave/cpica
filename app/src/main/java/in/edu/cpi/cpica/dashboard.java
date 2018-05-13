@@ -1,7 +1,6 @@
 package in.edu.cpi.cpica;
 
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -12,20 +11,18 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.NotificationCompat;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -54,7 +51,7 @@ public class dashboard extends AppCompatActivity
     NotificationManager nm;
     SharedPreferences sharedPreferences;
     RelativeLayout no_new_notifications_container,dashboard_content;
-    String notification_text,notification_title,notification_color,sending_to;
+    String notification_text,notification_title,notification_color,sending_to,sent_by_username;
     ProgressBar dashboard_progressbar;
     Animation dashboard_bell_icon_anim,dashboard_bell_off_icon_anim,fab_btn_anim,slow_fade_in_anim,slow_fade_out_anim;
     ImageView dashboard_bell_off_icon,dashboard_bell_icon;
@@ -155,6 +152,7 @@ public class dashboard extends AppCompatActivity
 
                 try{
                     for(i=1;i<=notification_count;i++){
+                        sent_by_username = dataSnapshot.child(i.toString()).child("sent_by_username").getValue().toString();
                         sending_to = dataSnapshot.child(i.toString()).child("sending_to").getValue().toString();
                         notification_text = dataSnapshot.child(i.toString()).child("notification_text").getValue().toString();
                         notification_title = dataSnapshot.child(i.toString()).child("notification_title").getValue().toString();
@@ -165,38 +163,50 @@ public class dashboard extends AppCompatActivity
                         else{ //this means the notification isn't read by this USERNAME.
                             if(sending_to!=null && notification_title!=null && notification_text!=null){
                                 if(sending_to.equals("EVERYONE")){
-                                    notify1.setContentTitle(notification_title);
-                                    notify1.setContentText(notification_text);
+
+                                    if(!sent_by_username.equals(username)){ //it notification isnt sent by me, NOTIFY!
+                                        notify1.setContentTitle(notification_title);
+                                        notify1.setContentText(notification_text);
 
 
-                                    Intent open_activity_intent = new Intent(getApplicationContext(), Detailed_notification.class);
+                                        Intent open_activity_intent = new Intent(getApplicationContext(), Detailed_notification.class);
 
-                                    open_activity_intent.putExtra("notification_id", i.toString());
-                                    open_activity_intent.putExtra("notification_title",notification_title);
-                                    open_activity_intent.putExtra("notification_text",notification_text);
-                                    open_activity_intent.putExtra("notification_color",notification_color);
+                                        open_activity_intent.putExtra("notification_id", i.toString());
+                                        open_activity_intent.putExtra("notification_title",notification_title);
+                                        open_activity_intent.putExtra("notification_text",notification_text);
+                                        open_activity_intent.putExtra("notification_color",notification_color);
 
-                                    PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(), i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                                    notify1.setContentIntent(open_activity_pi);
-                                    nm.notify(i, notify1.build());
+                                        PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(), i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                        notify1.setContentIntent(open_activity_pi);
+                                        nm.notify(i, notify1.build());
+                                    }
+                                    else{
+                                        read_notification_count += 1;
+                                    }
+
                                 }
                                 else{
                                     if(username.contains("CPI")){
                                         if(sending_to.equals("ADMINS")){
-                                            notify1.setContentTitle(notification_title);
-                                            notify1.setContentText(notification_text);
+                                            if(!sent_by_username.equals(username)){
+                                                notify1.setContentTitle(notification_title);
+                                                notify1.setContentText(notification_text);
 
 
-                                            Intent open_activity_intent = new Intent(getApplicationContext(), Detailed_notification.class);
+                                                Intent open_activity_intent = new Intent(getApplicationContext(), Detailed_notification.class);
 
-                                            open_activity_intent.putExtra("notification_id", i.toString());
-                                            open_activity_intent.putExtra("notification_title",notification_title);
-                                            open_activity_intent.putExtra("notification_text",notification_text);
-                                            open_activity_intent.putExtra("notification_color",notification_color);
+                                                open_activity_intent.putExtra("notification_id", i.toString());
+                                                open_activity_intent.putExtra("notification_title",notification_title);
+                                                open_activity_intent.putExtra("notification_text",notification_text);
+                                                open_activity_intent.putExtra("notification_color",notification_color);
 
-                                            PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(), i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                                            notify1.setContentIntent(open_activity_pi);
-                                            nm.notify(i, notify1.build());
+                                                PendingIntent open_activity_pi = PendingIntent.getActivity(getApplicationContext(), i, open_activity_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                                notify1.setContentIntent(open_activity_pi);
+                                                nm.notify(i, notify1.build());
+                                            }
+                                            else{
+                                                read_notification_count += 1;
+                                            }
                                         }
                                         else{
                                             read_notification_count += 1;
