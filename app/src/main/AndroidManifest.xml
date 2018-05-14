@@ -82,9 +82,18 @@
         <activity
             android:name=".No_internet"
             android:screenOrientation="portrait">
+
         </activity>
-        <activity android:name=".Overview_notification"
+        <activity
+            android:name=".Overview_notification"
             android:screenOrientation="portrait">
+
+
+        </activity>
+        <activity android:name=".Edit_profile"
+            android:screenOrientation="portrait">
+
+
         </activity>
     </application>
 

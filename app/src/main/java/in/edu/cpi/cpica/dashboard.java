@@ -1,5 +1,6 @@
 package in.edu.cpi.cpica;
 
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,11 +21,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -50,7 +54,7 @@ public class dashboard extends AppCompatActivity
     DatabaseReference notificationsref;
     NotificationManager nm;
     SharedPreferences sharedPreferences;
-    RelativeLayout no_new_notifications_container,dashboard_content;
+    RelativeLayout no_new_notifications_container,dashboard_content,dashboard_nav_bg;
     String notification_text,notification_title,notification_color,sending_to,sent_by_username;
     ProgressBar dashboard_progressbar;
     Animation dashboard_bell_icon_anim,dashboard_bell_off_icon_anim,fab_btn_anim,slow_fade_in_anim,slow_fade_out_anim;
@@ -64,6 +68,7 @@ public class dashboard extends AppCompatActivity
     ValueEventListener valuelistener1;
     ConnectivityManager connectivityManager;
     Boolean connected_to_internet;
+    ActivityOptions options;
 
 
     @Override
@@ -98,6 +103,7 @@ public class dashboard extends AppCompatActivity
         username = sharedPreferences.getString("username","");
         connected_to_internet = false;
         connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
 
 
 
@@ -287,7 +293,6 @@ public class dashboard extends AppCompatActivity
         notificationsref.addValueEventListener(valuelistener1);
 
 
-
     }
 
 
@@ -311,8 +316,13 @@ public class dashboard extends AppCompatActivity
         String username = sharedPreferences.getString("username","");
         String first_name = sharedPreferences.getString("first_name","");
         String last_name = sharedPreferences.getString("last_name","");
-        TextView drawer_username = (TextView)findViewById(R.id.username);
-        TextView username_welcome_text = (TextView)findViewById(R.id.username_welcome_text);
+        final TextView drawer_username = (TextView)findViewById(R.id.username_text);
+        final TextView username_welcome_text = (TextView)findViewById(R.id.username_welcome_text);
+        Button edit_profile_btn = (Button)findViewById(R.id.edit_profile_btn);
+        final ImageButton user_profile_icon = (ImageButton)findViewById(R.id.user_profile_icon);
+        dashboard_nav_bg = (RelativeLayout)findViewById(R.id.dashboard_nav_bg);
+
+
         drawer_username.setText(username);
         if(first_name.length()>0) {
             username_welcome_text.setText(first_name+"\n" + last_name);
@@ -321,6 +331,10 @@ public class dashboard extends AppCompatActivity
         RelativeLayout username_badge = (RelativeLayout)findViewById(R.id.username_badge);
 
         if(username.contains("CPI")){
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            Menu nav_Menu = navigationView.getMenu();
+            nav_Menu.findItem(R.id.nav_assignments).setVisible(false);
+
             username_badge.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.admin_badge));
         }
         else{
@@ -328,15 +342,24 @@ public class dashboard extends AppCompatActivity
         }
 
 
-        /*if (student_username==null) {
-            drawer_username.setText(username);
-        }
-        else{
-            drawer_username.setText(student_username);
-        }*/
+        edit_profile_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),Edit_profile.class);
 
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.dashboard, menu);
+                Pair[] pairs = new Pair[2];
+                pairs[0] = new Pair<View, String>(user_profile_icon,"profile_photo_transition");
+                pairs[1] = new Pair<View, String>(drawer_username,"profile_username_transition");
+
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    options = ActivityOptions.makeSceneTransitionAnimation(dashboard.this,pairs);
+                }
+
+                startActivity(i,options.toBundle());
+            }
+        });
+
+
         return true;
     }
 
@@ -346,6 +369,7 @@ public class dashboard extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
 
         if (id == R.id.nav_notifications) {
             notificationsref.removeEventListener(valuelistener1);
@@ -539,5 +563,6 @@ public class dashboard extends AppCompatActivity
     public void add_results_fab_onclick(View v){
         //this handles click events for the ADD RESULTS BUTTON on dashboard
     }
+
 
 }

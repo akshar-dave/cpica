@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Signup_admin_username extends AppCompatActivity {
 
@@ -35,6 +39,7 @@ public class Signup_admin_username extends AppCompatActivity {
     Animation bounce_anim,generating_admin_username_anim;
     Vibrator buzzer;
     ValueEventListener admin_username_listener;
+    Timer timer;
 
     @Override
     public void onBackPressed() {
@@ -64,8 +69,42 @@ public class Signup_admin_username extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.apply();
+        timer = new Timer();
 
         admin_username_box.startAnimation(generating_admin_username_anim);
+
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                runOnUiThread(new Runnable()
+                {
+                    public void run()
+                    {
+                        Toast.makeText(Signup_admin_username.this,"Your internet connection seems slow, please wait...",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        },5000);
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                runOnUiThread(new Runnable()
+                {
+                    public void run()
+                    {
+                        Toast.makeText(Signup_admin_username.this,"Taking longer than expected... Trying again.",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(Signup_admin_username.this,Signup_admin_username.class));
+                        finish();
+                    }
+                });
+
+            }
+        },15000);
 
         admin_username_listener = new ValueEventListener() {
             @Override
@@ -76,6 +115,7 @@ public class Signup_admin_username extends AppCompatActivity {
                 temp_username="cpi"+admin_username_int;
                 admin_username_box.setText(temp_username);
                 generating_admin_username_anim.cancel();
+                timer.cancel();
                 admin_username_box.startAnimation(bounce_anim);
                 buzzer.vibrate(75);
             }
