@@ -36,7 +36,7 @@ public class Login_password extends AppCompatActivity {
     Animation fab_btn_error_bounce,password_error_fade_anim;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-    String username,first_name,last_name;
+    String username,first_name,last_name,phone;
     String temp_password;
     ValueEventListener check_pass_listener;
 
@@ -101,6 +101,12 @@ public class Login_password extends AppCompatActivity {
                 temp_password = dataSnapshot.child(username).child("Password").getValue().toString();
                 first_name = dataSnapshot.child(username).child("First_name").getValue().toString();
                 last_name = dataSnapshot.child(username).child("Last_name").getValue().toString();
+                try{
+                    phone =  dataSnapshot.child(username).child("Phone").getValue().toString();
+                }
+                catch (NullPointerException e){
+
+                }
             }
 
             @Override
@@ -124,11 +130,7 @@ public class Login_password extends AppCompatActivity {
 
 
 
-        if (login_password.length() < 6 && login_password.length() > 0 ) {
-            password_error.setText("Password is incorrect. Please try again.");
-            error_occurrence =true;
-        }
-        else if (login_password.length() < 1 ) {
+        if (login_password.length() < 1 ) {
             password_error.setText("Please enter your password.");
             error_occurrence =true;
         }
@@ -143,6 +145,9 @@ public class Login_password extends AppCompatActivity {
                 editor.putString("password",temp_password).apply();
                 editor.putString("first_name",first_name).apply();
                 editor.putString("last_name",last_name).apply();
+                editor.putString("phone",phone).apply();
+                editor.putString("notifications_sound_enabled","false").apply();
+                editor.putString("notifications_vibration_enabled","true").apply();
 
                 Intent i = new Intent(getApplicationContext(), dashboard.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

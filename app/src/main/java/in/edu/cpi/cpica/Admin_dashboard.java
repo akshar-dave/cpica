@@ -74,6 +74,8 @@ public class Admin_dashboard extends AppCompatActivity {
                     editor.putString("first_name",setup_profile_firstname.getText().toString()).apply();
                     editor.putString("last_name",setup_profile_lastname.getText().toString()).apply();
                     editor.putString("gender",setup_profile_gender.getSelectedItem().toString()).apply();
+                    editor.putString("notifications_sound_enabled","false").apply();
+                    editor.putString("notifications_vibration_enabled","true").apply();
                     
                     myref.child(username).child("First_name").setValue(setup_profile_firstname.getText().toString());
                     myref.child(username).child("Last_name").setValue(setup_profile_lastname.getText().toString());

@@ -58,6 +58,8 @@ public class Student_dashboard extends AppCompatActivity {
                 editor.putString("first_name",setup_profile_firstname.getText().toString()).apply();
                 editor.putString("last_name",setup_profile_lastname.getText().toString()).apply();
                 editor.putString("gender",setup_profile_gender.getSelectedItem().toString()).apply();
+                editor.putString("notifications_sound_enabled","false").apply();
+                editor.putString("notifications_vibration_enabled","true").apply();
                 String first_name = sharedPreferences.getString("first_name","");
                 String last_name = sharedPreferences.getString("last_name","");
                 String gender = sharedPreferences.getString("gender","");

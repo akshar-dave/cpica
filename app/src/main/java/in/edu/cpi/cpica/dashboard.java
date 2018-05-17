@@ -12,14 +12,17 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.Menu;
@@ -41,6 +44,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class dashboard extends AppCompatActivity
@@ -69,6 +75,7 @@ public class dashboard extends AppCompatActivity
     ConnectivityManager connectivityManager;
     Boolean connected_to_internet;
     ActivityOptions options;
+    Timer timer;
 
 
     @Override
@@ -99,12 +106,40 @@ public class dashboard extends AppCompatActivity
         notify1 = new NotificationCompat.Builder(getApplicationContext());
         notify1.setAutoCancel(true);
         notify1.setSmallIcon(R.drawable.logo);
-        notify1.setVibrate(new long[] {50});
         username = sharedPreferences.getString("username","");
         connected_to_internet = false;
         connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        timer = new Timer();
 
+        if(sharedPreferences.getString("notifications_sound_enabled","").equals("true")){
+            notify1.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+        }
 
+        if(sharedPreferences.getString("notifications_vibration_enabled","").equals("true")){
+            notify1.setVibrate(new long[] {70,50,30});
+        }
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Snackbar.make(findViewById(android.R.id.content),"Internet seems slow...",Snackbar.LENGTH_SHORT).show();
+            }
+        },10000);
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Snackbar.make(findViewById(android.R.id.content),"Taking longer than expected...",Snackbar.LENGTH_SHORT).show();
+            }
+        },25000);
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                startActivity(new Intent(getApplicationContext(), No_internet.class));
+                finish();
+            }
+        },35000);
 
 
         myref = firebaseDatabase.getReference("Users");
@@ -252,6 +287,7 @@ public class dashboard extends AppCompatActivity
                 }
 
                 if(read_notification_count.equals(notification_count)){ // means there are no new notifications.
+                    timer.cancel();
                     dashboard_progressbar.startAnimation(slow_fade_out_anim);
                     no_new_notifications_container.setVisibility(View.VISIBLE);
 
@@ -261,6 +297,7 @@ public class dashboard extends AppCompatActivity
                     dashboard_no_new_notifications.startAnimation(slow_fade_in_anim);
                 }
                 else{
+                    timer.cancel();
                     dashboard_progressbar.startAnimation(slow_fade_out_anim);
                     no_new_notifications_container.setVisibility(View.VISIBLE);
                     dashboard_bell_icon.setVisibility(View.VISIBLE);
@@ -319,8 +356,12 @@ public class dashboard extends AppCompatActivity
         final TextView drawer_username = (TextView)findViewById(R.id.username_text);
         final TextView username_welcome_text = (TextView)findViewById(R.id.username_welcome_text);
         Button edit_profile_btn = (Button)findViewById(R.id.edit_profile_btn);
-        final ImageButton user_profile_icon = (ImageButton)findViewById(R.id.user_profile_icon);
+        final ImageView user_profile_icon = (ImageView)findViewById(R.id.user_profile_icon);
+        final CardView edit_profile_user_icon_container = (CardView)findViewById(R.id.edit_profile_user_icon_container);
         dashboard_nav_bg = (RelativeLayout)findViewById(R.id.dashboard_nav_bg);
+        final Pair[] pairs = new Pair[2];
+        pairs[0] = new Pair<View, String>(edit_profile_user_icon_container,"profile_photo_transition");
+        pairs[1] = new Pair<View, String>(drawer_username,"profile_username_transition");
 
 
         drawer_username.setText(username);
@@ -347,10 +388,6 @@ public class dashboard extends AppCompatActivity
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(),Edit_profile.class);
 
-                Pair[] pairs = new Pair[2];
-                pairs[0] = new Pair<View, String>(user_profile_icon,"profile_photo_transition");
-                pairs[1] = new Pair<View, String>(drawer_username,"profile_username_transition");
-
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                     options = ActivityOptions.makeSceneTransitionAnimation(dashboard.this,pairs);
                 }
@@ -372,6 +409,7 @@ public class dashboard extends AppCompatActivity
 
 
         if (id == R.id.nav_notifications) {
+
             notificationsref.removeEventListener(valuelistener1);
             startActivity(new Intent(getApplicationContext(),Overview_notification.class));
             finish();
@@ -411,6 +449,7 @@ public class dashboard extends AppCompatActivity
                 editor.remove("password");
                 editor.remove("gender");
                 editor.remove("email");
+                editor.remove("phone");
                 editor.apply();
                 nm.cancelAll();
                 Toast.makeText(getApplicationContext(),"You have been logged out successfully.",Toast.LENGTH_SHORT).show();
