@@ -21,7 +21,9 @@
             android:id="@+id/user_profile_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerInside"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/three_dots_black"
+            android:padding="32dp"/>
 
     </android.support.v7.widget.CardView>
 
@@ -104,8 +106,7 @@
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/logout_btn"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="10dp"/>
-
-
+        android:layout_marginBottom="10dp"
+        android:drawableLeft="@drawable/settings_blue"/>
 
 </RelativeLayout>

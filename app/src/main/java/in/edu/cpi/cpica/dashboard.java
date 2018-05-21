@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -44,6 +45,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -159,6 +161,8 @@ public class dashboard extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
 
 
         //this will decide whether to remove the fab on start or not
@@ -369,6 +373,17 @@ public class dashboard extends AppCompatActivity
             username_welcome_text.setText(first_name+"\n" + last_name);
         }
 
+
+
+        if(sharedPreferences.contains("user_icon_path")){
+            Picasso.with(getApplicationContext()).load(Uri.parse(sharedPreferences.getString("user_icon_path",""))).resize(Integer.parseInt((sharedPreferences.getString("user_icon_width","1920")))/5,Integer.parseInt(sharedPreferences.getString("user_icon_height","1080"))/5).into(user_profile_icon);
+            user_profile_icon.setPadding(0,0,0,0);
+        }
+        else{
+            Picasso.with(getApplicationContext()).load(R.drawable.logo).placeholder(R.drawable.logo).into(user_profile_icon);
+            user_profile_icon.setPadding(40,40,40,40);
+        }
+
         RelativeLayout username_badge = (RelativeLayout)findViewById(R.id.username_badge);
 
         if(username.contains("CPI")){
@@ -409,13 +424,15 @@ public class dashboard extends AppCompatActivity
 
 
         if (id == R.id.nav_notifications) {
-
             notificationsref.removeEventListener(valuelistener1);
             startActivity(new Intent(getApplicationContext(),Overview_notification.class));
             finish();
             //Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_assignments) {
-            Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
+            notificationsref.removeEventListener(valuelistener1);
+            startActivity(new Intent(getApplicationContext(),Overview_notification.class));
+            finish();
+            // Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_results) {
             Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_attendance) {
@@ -450,6 +467,9 @@ public class dashboard extends AppCompatActivity
                 editor.remove("gender");
                 editor.remove("email");
                 editor.remove("phone");
+                editor.remove("user_icon_path");
+                editor.remove("user_icon_width");
+                editor.remove("user_icon_height");
                 editor.apply();
                 nm.cancelAll();
                 Toast.makeText(getApplicationContext(),"You have been logged out successfully.",Toast.LENGTH_SHORT).show();
