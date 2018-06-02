@@ -28,17 +28,21 @@ import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -85,8 +89,6 @@ public class dashboard extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        //SystemClock.sleep(1000);
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         is_fab_open = false;
         firebaseAuth = FirebaseAuth.getInstance();
@@ -112,6 +114,8 @@ public class dashboard extends AppCompatActivity
         connected_to_internet = false;
         connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         timer = new Timer();
+
+
 
         if(sharedPreferences.getString("notifications_sound_enabled","").equals("true")){
             notify1.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
@@ -182,7 +186,7 @@ public class dashboard extends AppCompatActivity
                 notificationsref.removeEventListener(valuelistener1);
                 startActivity(new Intent(getApplicationContext(),Overview_notification.class));
                 finish();
-
+                timer.cancel();
                 return true;
             }
         });
@@ -425,18 +429,21 @@ public class dashboard extends AppCompatActivity
 
         if (id == R.id.nav_notifications) {
             notificationsref.removeEventListener(valuelistener1);
+            timer.cancel();
             startActivity(new Intent(getApplicationContext(),Overview_notification.class));
             finish();
             //Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_assignments) {
+            //Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
             notificationsref.removeEventListener(valuelistener1);
-            startActivity(new Intent(getApplicationContext(),Overview_notification.class));
-            finish();
-            // Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
+            timer.cancel();
+            startActivity(new Intent(getApplicationContext(),Assignments.class));
         } else if (id == R.id.nav_results) {
             Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
+            timer.cancel();
         } else if (id == R.id.nav_attendance) {
             Toast.makeText(getApplicationContext(),"Please connect to a database.", Toast.LENGTH_SHORT).show();
+            timer.cancel();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

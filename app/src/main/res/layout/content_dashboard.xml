@@ -69,7 +69,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/dashboard_content">
+        android:id="@+id/dashboard_content"
+        android:background="?attr/selectableItemBackground">
 
         <RelativeLayout
             android:layout_width="match_parent"
