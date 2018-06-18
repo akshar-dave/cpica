@@ -1,6 +1,6 @@
 //This is a college project.
 
-### *!!* Had some issues with github backup which resulted into losing the code. I've added the apk that's done until the NOTIFICATIONS part. Download link is added below *!!*
+### *!!* Had some issues with github backup which resulted into losing the code. I've added the apk that's done until the NOTIFICATIONS part. Download link is added below. I might restart the app from scratch later. *!!*
 
 CPICA (Chimanbhai Patel Institute of Computer Applications)
 
