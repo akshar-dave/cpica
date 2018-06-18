@@ -7,10 +7,10 @@ CPICA (Chimanbhai Patel Institute of Computer Applications)
 This app is for college managerial tasks intending to help increase efficiency of the same.
 
 App will benefit the institution in for major ways:
-⋅⋅* NOTIFICATIONS
-⋅⋅* ASSIGNMENTS
-⋅⋅* ATTENDANCE
-⋅⋅* RESULTS
+* NOTIFICATIONS
+* ASSIGNMENTS
+* ATTENDANCE
+* RESULTS
 
 • Attendance: Students will be able to check the monthly average of their class attendance. Staff(Teachers) will be able to mark attendance easily that will directly get stored into the database.
 
