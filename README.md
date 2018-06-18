@@ -1,16 +1,16 @@
 //This is a college project.
 
-*!!* Had some issues with github backup which resulted into losing the code. I've added the apk that's done until the NOTIFICATIONS part. Download link is added below *!!*
+#### *!!* Had some issues with github backup which resulted into losing the code. I've added the apk that's done until the NOTIFICATIONS part. Download link is added below *!!*
 
 CPICA (Chimanbhai Patel Institute of Computer Applications)
 
 This app is for college managerial tasks intending to help increase efficiency of the same.
 
 App will benefit the institution in for major ways:
-1.) ATTENDANCE
-2.) ASSIGNMENTS
-3.) ANNOUNCEMENTS
-4.) RESULTS
+⋅⋅* NOTIFICATIONS
+⋅⋅* ASSIGNMENTS
+⋅⋅* ATTENDANCE
+⋅⋅* RESULTS
 
 • Attendance: Students will be able to check the monthly average of their class attendance. Staff(Teachers) will be able to mark attendance easily that will directly get stored into the database.
 
@@ -22,4 +22,4 @@ App will benefit the institution in for major ways:
 
 ---
 
-You can download the app here: [DOWNLOAD](https://github.com/fakeakshar/CPICA2/raw/master/app/CPICA.apk/ "Download")
+You can download a working version of the app here: [DOWNLOAD](https://github.com/fakeakshar/CPICA2/raw/master/app/CPICA.apk/ "Download")
