@@ -1,5 +1,6 @@
 //This is a college project.
 
+*!!* Had some issues with github backup which resulted into losing the code. I've added the apk that's done until the NOTIFICATIONS part. Download link is added below *!!*
 
 CPICA (Chimanbhai Patel Institute of Computer Applications)
 
@@ -20,3 +21,5 @@ App will benefit the institution in for major ways:
 • Results: Yearly exam results will be made available to students for analysis.
 
 ---
+
+You can download the app here: [DOWNLOAD](https://github.com/fakeakshar/CPICA2/raw/master/app/CPICA.apk/ "Download")
